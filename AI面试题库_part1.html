@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI算法研发岗 · 面试题库</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f0f4f8; color: #2d3748; }
+  .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; }
+  .hero h1 { font-size: 2rem; margin-bottom: 10px; }
+  .hero p { font-size: 1rem; opacity: 0.9; }
+  .stats { display: flex; justify-content: center; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
+  .stat { background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 20px; text-align: center; }
+  .stat .num { font-size: 1.8rem; font-weight: bold; }
+  .stat .label { font-size: 0.8rem; opacity: 0.85; }
+  .nav { background: white; padding: 15px 20px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+  .nav a { text-decoration: none; color: #667eea; font-size: 0.85rem; padding: 5px 12px; border-radius: 20px; border: 1px solid #667eea; transition: all 0.2s; }
+  .nav a:hover { background: #667eea; color: white; }
+  .container { max-width: 900px; margin: 30px auto; padding: 0 15px 60px; }
+  .section-title { font-size: 1.4rem; font-weight: bold; color: white; padding: 12px 20px; border-radius: 10px 10px 0 0; margin-top: 40px; display: flex; align-items: center; gap: 10px; }
+  .section-title .icon { font-size: 1.5rem; }
+  .s1 { background: linear-gradient(90deg, #f093fb, #f5576c); }
+  .s2 { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+  .s3 { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+  .s4 { background: linear-gradient(90deg, #fa709a, #fee140); }
+  .s5 { background: linear-gradient(90deg, #a18cd1, #fbc2eb); }
+  .s6 { background: linear-gradient(90deg, #ffecd2, #fcb69f); color: #333 !important; }
+  .question-card { background: white; border-radius: 0 0 0 0; padding: 22px 24px; border-bottom: 1px solid #edf2f7; position: relative; }
+  .question-card:last-child { border-radius: 0 0 10px 10px; border-bottom: none; }
+  .question-card:first-of-type { margin-top: 0; }
+  .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+  .q-num { min-width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: white; flex-shrink: 0; }
+  .single .q-num { background: #667eea; }
+  .multi .q-num { background: #f5576c; }
+  .short .q-num { background: #43e97b; color: #1a7a4a; }
+  .type-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-left: 5px; vertical-align: middle; }
+  .single .type-badge { background: #ebf4ff; color: #667eea; }
+  .multi .type-badge { background: #fff5f5; color: #f5576c; }
+  .short .type-badge { background: #f0fff4; color: #2f855a; }
+  .q-text { font-size: 1rem; line-height: 1.7; font-weight: 500; }
+  .options { margin: 12px 0 12px 48px; }
+  .options li { list-style: none; padding: 6px 10px; margin: 4px 0; border-radius: 6px; font-size: 0.95rem; line-height: 1.6; background: #f7fafc; border-left: 3px solid #e2e8f0; }
+  .answer-block { margin: 12px 0 0 48px; background: linear-gradient(135deg, #f6ffed, #e6f7ff); border-radius: 8px; padding: 14px 16px; border-left: 4px solid #52c41a; }
+  .answer-label { font-weight: bold; color: #389e0d; font-size: 0.9rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .answer-text { color: #1a5a2e; font-size: 0.92rem; line-height: 1.8; }
+  .answer-text strong { color: #d4380d; }
+  .answer-text .key { background: #fff7e6; color: #d46b08; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.88rem; }
+  .section-wrap { box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+  .tip { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px; padding: 12px 16px; margin: 20px 0; font-size: 0.9rem; color: #614700; }
+  .tip strong { color: #d46b08; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🤖 AI算法研发岗 · 面试题库</h1>
+  <p>覆盖 RAG · Agent · 大模型训练/微调 · 评估 · 大模型架构 · 强化学习 · KV Cache等核心知识点</p>
+  <div class="stats">
+    <div class="stat"><div class="num">60</div><div class="label">总题数</div></div>
+    <div class="stat"><div class="num">30</div><div class="label">单选题</div></div>
+    <div class="stat"><div class="num">15</div><div class="label">多选题</div></div>
+    <div class="stat"><div class="num">15</div><div class="label">简答题</div></div>
+  </div>
+</div>
+
+<div class="nav">
+  <a href="#s1">📚 大模型架构</a>
+  <a href="#s2">🔍 RAG检索增强</a>
+  <a href="#s3">🤖 Agent智能体</a>
+  <a href="#s4">🏋️ 训练与微调</a>
+  <a href="#s5">📊 评估方法</a>
+  <a href="#s6">🎮 强化学习</a>
+</div>
+
+<div class="container">
+
+<div class="tip">
+  <strong>📌 使用说明：</strong>先独立思考作答，再展开查看答案解析。单选题 🔵，多选题 🔴，简答题 🟢。加油，明天面试必过！💪
+</div>
+
+<!-- ==================== 第一部分：大模型架构 ==================== -->
+<div id="s1">
+<div class="section-title s1"><span class="icon">📚</span> 第一部分：大模型架构（14题）</div>
+<div class="section-wrap">
+
+<!-- Q1 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">1</div>
+    <div class="q-text">Transformer中的Multi-Head Attention（多头注意力）相比单头注意力的主要优势是什么？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 减少了模型参数量</li>
+    <li>B. 可以从多个不同的子空间同时捕获不同的语义关系</li>
+    <li>C. 消除了位置编码的需要</li>
+    <li>D. 使得模型计算速度更快</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      多头注意力将Q、K、V分别投影到 <strong>h个不同的低维子空间</strong>，每个头独立计算注意力，再拼接结果。这样不同的头可以关注不同的语义模式（比如一个头关注句法依存，另一个头关注语义相似度），表达能力更强。<br>
+      单头注意力只能在一个语义空间里建模关系，而多头可以<strong>并行捕获多种关系模式</strong>，是Transformer成功的关键设计之一。
+    </div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">2</div>
+    <div class="q-text">KV Cache（键值缓存）技术的核心作用是什么？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 压缩模型权重，减少显存占用</li>
+    <li>B. 在自回归生成时，缓存已生成token的K和V，避免重复计算</li>
+    <li>C. 将模型的注意力头数动态减少以加速推理</li>
+    <li>D. 将Prompt压缩成固定长度的向量</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      大模型自回归生成时，每生成一个新token，都需要对<strong>所有历史token重新计算K和V</strong>，这非常浪费。<br>
+      KV Cache的思路：把之前算好的K矩阵和V矩阵存在显存里，生成新token时只需计算<strong>新token的Q、K、V</strong>，然后把新的K、V追加到缓存中，再用新Q与所有缓存的K做注意力计算。这样避免了大量重复计算，大幅提升推理速度。<br>
+      <strong>代价：</strong>KV Cache会占用显存，序列越长占用越大，这是限制上下文长度的重要因素之一。
+    </div>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">3</div>
+    <div class="q-text">RoPE（旋转位置编码）相比绝对位置编码的核心优势是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 参数量更少，训练更快</li>
+    <li>B. 能更好地外推到训练时未见过的更长序列</li>
+    <li>C. 不需要在输入层添加，直接在输出层处理</li>
+    <li>D. 消除了注意力机制的计算复杂度</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      绝对位置编码（如BERT的可学习位置编码）对每个位置分配固定的编码，训练时如果最大长度是512，推理时超过512就完全没见过，泛化性差。<br>
+      <strong>RoPE</strong>通过旋转矩阵将位置信息编码到Q、K的点积中，编码的是<strong>相对位置关系</strong>（token i和token j之间的距离），而不是绝对位置。这使得RoPE具有更好的<strong>长度外推性</strong>，也是LLaMA、Qwen等模型的标配位置编码方案。
+    </div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">4</div>
+    <div class="q-text">下列哪种注意力机制可以在保持接近MHA（多头注意力）效果的同时，显著减少KV Cache的显存占用？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. Flash Attention</li>
+    <li>B. GQA（分组查询注意力）</li>
+    <li>C. Sparse Attention</li>
+    <li>D. Linear Attention</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      <strong>GQA（Grouped Query Attention）</strong>：多个Query头共享一组K、V头。比如32个Q头分成8组，每组4个Q头共享同一个K、V，KV Cache减少为原来的1/4。<br>
+      对比：<br>
+      · <span class="key">MHA</span>：Q、K、V各有h个头，KV Cache最大<br>
+      · <span class="key">MQA</span>：所有Q头共享1个K、V头，KV Cache最小但效果下降明显<br>
+      · <span class="key">GQA</span>：折中方案，效果接近MHA，显存接近MQA，是LLaMA2、Mistral等模型的选择<br>
+      Flash Attention是内存高效的注意力计算实现，并不减少KV Cache量。
+    </div>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">5</div>
+    <div class="q-text">Transformer中FFN（前馈网络）层通常采用什么激活函数，现代大模型普遍用哪种？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 原始Transformer用ReLU，现代大模型多用SwiGLU</li>
+    <li>B. 原始Transformer用Sigmoid，现代大模型多用GELU</li>
+    <li>C. 原始Transformer和现代大模型都用ReLU</li>
+    <li>D. 原始Transformer用GELU，现代大模型多用SwiGLU</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：A</div>
+    <div class="answer-text">
+      原始Transformer（Attention is All You Need, 2017）FFN用的是<strong>ReLU</strong>。<br>
+      <strong>SwiGLU</strong> = Swish激活 + GLU（门控线性单元）的结合，由Google在PaLM等模型中推广，LLaMA、Qwen、Mistral等主流大模型均采用SwiGLU。<br>
+      SwiGLU的公式：<span class="key">FFN(x) = (W₁x ⊙ Swish(W₂x)) · W₃</span>，用两个线性变换的乘积作门控，实验上比ReLU/GELU有更好的效果。<br>
+      代价是参数量略多（需要3个权重矩阵而非2个），通常会把隐层维度从4d缩为8d/3来补偿。
+    </div>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">6</div>
+    <div class="q-text">Layer Normalization在Transformer中有Pre-Norm和Post-Norm两种变体，下列说法正确的是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. Post-Norm训练更稳定，现代大模型多用Post-Norm</li>
+    <li>B. Pre-Norm将LayerNorm放在子层之前，训练更稳定，现代大模型多用Pre-Norm</li>
+    <li>C. 两者效果完全相同，没有区别</li>
+    <li>D. Pre-Norm只适合小模型，大模型必须用Post-Norm</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      <strong>Post-Norm</strong>（原始Transformer）：残差连接后做LayerNorm，即 <span class="key">output = LN(x + F(x))</span>，梯度不稳定，深层模型训练困难，需要warmup等技巧。<br>
+      <strong>Pre-Norm</strong>：先做LayerNorm再进子层，即 <span class="key">output = x + F(LN(x))</span>，梯度流更稳定，可以用更大的学习率，不易出现梯度消失/爆炸。<br>
+      GPT-2及之后的几乎所有大模型（GPT-3、LLaMA、Qwen等）都用<strong>Pre-Norm</strong>。<br>
+      另外一些模型（如DeepNorm）在Post-Norm基础上进行了改进，也能训练深层模型。
+    </div>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">7</div>
+    <div class="q-text">Flash Attention的核心思想是什么？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 只计算部分token的注意力，跳过不重要的token</li>
+    <li>B. 通过分块（Tiling）计算，避免在HBM中存储完整的注意力矩阵，降低IO开销</li>
+    <li>C. 将注意力计算从O(n²)降低到O(n log n)</li>
+    <li>D. 使用稀疏矩阵替代密集注意力矩阵</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      注意力计算的瓶颈不是计算量（FLOPS），而是<strong>显存读写（IO）</strong>。标准注意力需要把N×N的注意力矩阵写入HBM（显存），再读回来做softmax，IO开销是O(N²)。<br>
+      <strong>Flash Attention</strong>的创新：将Q、K、V分成小块，在<strong>SRAM（片上缓存）</strong>中计算注意力，利用在线softmax技巧，不需要把完整的N×N矩阵写入HBM，IO复杂度降至O(N)级别。<br>
+      计算量不变（还是O(N²)），但速度快2-4倍，显存从O(N²)降到O(N)，是目前大模型训练推理的标配。Flash Attention v2/v3进一步优化了并行效率。
+    </div>
+  </div>
+</div>
+
+<!-- Q8 多选 -->
+<div class="question-card multi">
+  <div class="q-header">
+    <div class="q-num">8</div>
+    <div class="q-text">关于Transformer的自注意力计算复杂度，下列说法正确的有？<span class="type-badge">多选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 标准自注意力的时间复杂度为O(n²d)，其中n是序列长度，d是维度</li>
+    <li>B. 序列长度翻倍，标准注意力的计算量约变为4倍</li>
+    <li>C. 标准注意力的显存（存储注意力矩阵）复杂度为O(n²)</li>
+    <li>D. Flash Attention将计算复杂度从O(n²)降到了O(n log n)</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：A、B、C</div>
+    <div class="answer-text">
+      · <strong>A正确</strong>：Q·Kᵀ是(n×d)·(d×n) = n²d次乘法，复杂度O(n²d)。<br>
+      · <strong>B正确</strong>：n翻倍则n²变为4n²，计算量变为约4倍，这是长序列的痛点。<br>
+      · <strong>C正确</strong>：注意力矩阵是n×n的，存储复杂度O(n²)。<br>
+      · <strong>D错误</strong>：Flash Attention只是优化了IO效率，<strong>计算复杂度仍是O(n²)</strong>，只是显存IO从O(n²)降到了O(n)。真正降低计算复杂度的是Linformer等近似注意力方法。
+    </div>
+  </div>
+</div>
+
+<!-- Q9 多选 -->
+<div class="question-card multi">
+  <div class="q-header">
+    <div class="q-num">9</div>
+    <div class="q-text">关于大模型常用的归一化方式，下列说法正确的有？<span class="type-badge">多选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. RMSNorm相比LayerNorm去掉了均值中心化步骤，计算更快</li>
+    <li>B. LayerNorm对同一层所有神经元的激活值进行归一化</li>
+    <li>C. LLaMA、Qwen等模型使用RMSNorm而非LayerNorm</li>
+    <li>D. BatchNorm比LayerNorm更适合NLP任务中的序列建模</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：A、B、C</div>
+    <div class="answer-text">
+      · <strong>A正确</strong>：LayerNorm计算 <span class="key">(x - μ) / σ</span>，RMSNorm只计算 <span class="key">x / RMS(x)</span>，去掉了减均值操作，速度更快，效果相近。<br>
+      · <strong>B正确</strong>：LayerNorm在特征维度上做归一化，即对同一个样本的所有特征归一化。<br>
+      · <strong>C正确</strong>：LLaMA1/2/3、Qwen等均采用RMSNorm。<br>
+      · <strong>D错误</strong>：BatchNorm依赖batch内的统计量，对变长序列不友好，NLP领域普遍用LayerNorm/RMSNorm。
+    </div>
+  </div>
+</div>
+
+<!-- Q10 简答 -->
+<div class="question-card short">
+  <div class="q-header">
+    <div class="q-num">10</div>
+    <div class="q-text">请解释大模型中 Prefill 和 Decode 两个推理阶段的区别，以及 KV Cache 在其中的作用。<span class="type-badge">简答</span></div>
+  </div>
+  <div class="answer-block">
+    <div class="answer-label">✅ 参考答案</div>
+    <div class="answer-text">
+      <strong>Prefill（预填充）阶段：</strong>将用户输入的Prompt（比如100个token）一次性并行输入模型，计算所有token的KV并存入KV Cache，同时生成第一个输出token。这个阶段可以并行处理所有输入token，速度较快，但计算量大。<br><br>
+      <strong>Decode（解码）阶段：</strong>自回归逐token生成，每次只输入上一步生成的1个token，从KV Cache中取出历史所有token的K、V，计算注意力后预测下一个token。这个阶段每步只处理1个token，是序列生成，无法并行，是推理速度的主要瓶颈。<br><br>
+      <strong>KV Cache的作用：</strong>避免在Decode阶段对历史token重复计算K、V。每生成一个token，只需计算该token的新K、V并追加到缓存，大幅减少计算量（从O(n²)降到O(n)每步）。代价是需要额外显存存储K、V矩阵，序列越长消耗越多。
+    </div>
+  </div>
+</div>
+
+<!-- Q11 简答 -->
+<div class="question-card short">
+  <div class="q-header">
+    <div class="q-num">11</div>
+    <div class="q-text">MoE（混合专家模型）的基本思路是什么？它相比Dense模型有什么优缺点？<span class="type-badge">简答</span></div>
+  </div>
+  <div class="answer-block">
+    <div class="answer-label">✅ 参考答案</div>
+    <div class="answer-text">
+      <strong>MoE基本思路：</strong>将FFN层替换为多个"专家网络"（Expert），每个token通过一个路由器（Router）选择topK个专家来处理，其余专家不参与计算。例如有8个专家，每个token只激活2个，实现"稀疏激活"。<br><br>
+      <strong>优点：</strong><br>
+      · <strong>参数规模大，激活参数少：</strong>Mixtral 8×7B总参数约47B，但每次推理只激活约13B，推理速度接近13B模型<br>
+      · <strong>效果强：</strong>总参数量带来强大的表达能力，接近同参数Dense模型的效果甚至更好<br><br>
+      <strong>缺点：</strong><br>
+      · <strong>显存占用大：</strong>所有专家的参数都要加载<br>
+      · <strong>负载均衡难：</strong>如果路由器总选相同的专家，会导致部分专家被过度使用（需要辅助损失来均衡）<br>
+      · <strong>训练不稳定：</strong>路由学习容易崩溃，工程实现复杂
+    </div>
+  </div>
+</div>
+
+<!-- Q12 单选 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">12</div>
+    <div class="q-text">下列关于位置编码的说法，错误的是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. ALiBi通过在注意力分数上加偏置（与距离成比例）来编码位置信息</li>
+    <li>B. RoPE将位置信息编码到Q、K的旋转变换中，而不是直接加到embedding上</li>
+    <li>C. 绝对位置编码在超出训练长度时完全无法工作，而相对位置编码可以无限外推</li>
+    <li>D. LLaMA使用RoPE作为位置编码</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：C</div>
+    <div class="answer-text">
+      C是错误说法。相对位置编码并不能"无限外推"，超出训练分布后效果也会下降，只是相对绝对位置编码泛化性更好一些。<br>
+      各位置编码总结：<br>
+      · <span class="key">正弦绝对位置编码</span>：可以处理比训练长度更长的序列，但效果有限<br>
+      · <span class="key">可学习绝对位置编码</span>（BERT）：固定长度，超出则没有编码<br>
+      · <span class="key">RoPE</span>：相对位置，外推性好，主流大模型标配<br>
+      · <span class="key">ALiBi</span>：注意力偏置，超长外推性较好，Bloom用此方案<br>
+      没有任何位置编码能"无限外推"，都有其局限性。
+    </div>
+  </div>
+</div>
+
+<!-- Q13 单选 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">13</div>
+    <div class="q-text">Tokenizer中BPE（字节对编码）的核心思想是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 将文本按字符切割，每个字符是一个token</li>
+    <li>B. 统计字符对频率，反复合并最频繁的相邻字符对，构建词表</li>
+    <li>C. 基于语言学规则切分词语</li>
+    <li>D. 使用神经网络学习最优切分方式</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      <strong>BPE算法步骤：</strong><br>
+      1. 从字符级词表开始（所有单个字符）<br>
+      2. 统计相邻字符对的出现频率<br>
+      3. 合并最频繁的字符对为新token，加入词表<br>
+      4. 重复直到词表达到目标大小<br><br>
+      例如 "l","o","w","e","r" → 合并"lo" → 合并"low" → ... 逐步构建高频子词。<br>
+      GPT系列使用BPE，中文大模型通常在BPE基础上对中文字符做特殊处理，词表大小通常32K-150K不等。
+    </div>
+  </div>
+</div>
+
+<!-- Q14 多选 -->
+<div class="question-card multi">
+  <div class="q-header">
+    <div class="q-num">14</div>
+    <div class="q-text">关于大模型推理加速技术，下列说法正确的有？<span class="type-badge">多选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 量化（如INT8/INT4）通过降低权重精度来减少显存和加速计算</li>
+    <li>B. Speculative Decoding（投机解码）使用小模型快速生成草稿，再用大模型验证，可提升吞吐</li>
+    <li>C. Continuous Batching（连续批处理）允许不同请求共享显存中的KV Cache</li>
+    <li>D. PagedAttention将KV Cache分成固定大小的块（page），减少显存碎片化</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：A、B、D</div>
+    <div class="answer-text">
+      · <strong>A正确</strong>：INT8/INT4量化是主流推理加速方案，GPTQ、AWQ等都是量化方法。<br>
+      · <strong>B正确</strong>：投机解码让小Draft模型一次生成多个token，Target大模型并行验证，大幅提升生成速度。<br>
+      · <strong>C部分错误</strong>：Continuous Batching是指动态调度多个请求共享GPU，提升利用率，但KV Cache通常是各请求独立的（除非用Prefix Caching共享公共前缀部分）。<br>
+      · <strong>D正确</strong>：vLLM的PagedAttention将KV Cache类比操作系统的内存分页，非连续存储，减少碎片，大幅提升推理吞吐。
+    </div>
+  </div>
+</div>
+
+</div><!-- end section-wrap -->
+</div><!-- end s1 -->
+
+<!-- ==================== 第二部分：RAG ==================== -->
+<div id="s2">
+<div class="section-title s2"><span class="icon">🔍</span> 第二部分：RAG 检索增强生成（12题）</div>
+<div class="section-wrap">
+
+<!-- Q15 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">15</div>
+    <div class="q-text">RAG（检索增强生成）的基本流程是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 将所有文档直接放入Prompt，然后让模型回答</li>
+    <li>B. 将问题转化为向量，检索相关文档片段，将片段拼入Prompt供模型生成答案</li>
+    <li>C. 先用模型生成答案，再用检索结果验证答案正确性</li>
+    <li>D. 对文档进行摘要，将摘要存入数据库供检索</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      RAG标准流程（三步）：<br>
+      1. <strong>索引（Indexing）：</strong>将文档切块 → 向量化（Embedding） → 存入向量数据库<br>
+      2. <strong>检索（Retrieval）：</strong>将用户Query向量化 → 在向量数据库中检索topK相关片段<br>
+      3. <strong>生成（Generation）：</strong>将检索到的片段作为上下文，与Query一起拼成Prompt → 大模型生成答案<br><br>
+      RAG的价值：让模型能访问训练数据之外的知识（私有文档、最新信息），且有来源可查，减少幻觉。
+    </div>
+  </div>
+</div>
+
+<!-- Q16 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">16</div>
+    <div class="q-text">向量数据库中常用的近似最近邻（ANN）检索算法是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 二分搜索</li>
+    <li>B. HNSW（分层可导航小世界图）</li>
+    <li>C. BM25</li>
+    <li>D. TF-IDF</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      <strong>HNSW（Hierarchical Navigable Small World）</strong>是目前向量数据库（Faiss、Qdrant、Weaviate等）中最常用的ANN算法，构建多层图结构，查询时从顶层稀疏图出发逐步缩小范围，时间复杂度接近O(log n)。<br>
+      · <span class="key">BM25</span>：基于词频的<strong>稀疏检索</strong>算法，不是向量检索<br>
+      · <span class="key">TF-IDF</span>：文本特征表示方法，也是稀疏方法<br>
+      其他ANN算法还有IVF（倒排文件）、PQ（乘积量化）等，但HNSW综合性能最优，是主流选择。
+    </div>
+  </div>
+</div>
+
+<!-- Q17 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">17</div>
+    <div class="q-text">混合检索（Hybrid Search）在RAG中的意义是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 同时使用多个不同的大模型进行生成</li>
+    <li>B. 结合稀疏检索（BM25）和密集向量检索，兼顾关键词精确匹配和语义相似度</li>
+    <li>C. 对同一个问题检索多个向量数据库</li>
+    <li>D. 在检索时同时使用中文和英文进行查询</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      <strong>稀疏检索（BM25/TF-IDF）：</strong>擅长精确关键词匹配，对专有名词、型号、代码等效果好，召回精准但语义理解弱。<br>
+      <strong>密集向量检索（Embedding）：</strong>理解语义相似性，对同义词、改写等效果好，但可能漏掉关键词精确匹配。<br>
+      <strong>混合检索：</strong>两者结合，用<strong>RRF（倒序排名融合）</strong>等方法合并排名，综合效果通常优于单一方法。<br>
+      实践中混合检索是RAG的最佳实践之一，适用于专业知识库问答。
+    </div>
+  </div>
+</div>
+
+<!-- Q18 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">18</div>
+    <div class="q-text">在RAG中，Reranker（重排序器）的作用是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 替代向量检索，直接从数据库中选取最相关文档</li>
+    <li>B. 在向量检索后，对粗召回的候选文档进行精细相关性打分并重新排序</li>
+    <li>C. 对检索到的文档进行摘要压缩</li>
+    <li>D. 对用户问题进行改写，提高检索召回率</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      RAG中常见的两阶段检索：<br>
+      <strong>第一阶段（粗召回）：</strong>向量检索快速召回TopK（如Top50）候选，速度快但精度有限<br>
+      <strong>第二阶段（精排）：</strong>用Cross-Encoder（双向编码器）对Query和每个候选文档<strong>联合编码</strong>，输出精确的相关性分数，重新排序后取Top5送入LLM。<br>
+      Cross-Encoder比Bi-Encoder（向量检索用的）精度高但速度慢，所以只用于对少量候选精排。常用Reranker：<span class="key">bge-reranker</span>、<span class="key">Cohere Rerank</span>等。
+    </div>
+  </div>
+</div>
+
+<!-- Q19 多选 -->
+<div class="question-card multi">
+  <div class="q-header">
+    <div class="q-num">19</div>
+    <div class="q-text">RAG中文档分块（Chunking）策略对效果影响很大，下列哪些是合理的分块策略？<span class="type-badge">多选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 固定大小分块（如512 token），并设置一定的重叠（overlap）避免截断</li>
+    <li>B. 按语义段落分块，保持完整的语义单元</li>
+    <li>C. 将整个文档作为一个chunk，不做切割</li>
+    <li>D. 小块存储用于检索，大块存储用于生成（Small-to-Big Retrieval）</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：A、B、D</div>
+    <div class="answer-text">
+      · <strong>A正确</strong>：固定大小+重叠是最简单的策略，overlap（如128 token）保证跨块边界的信息不丢失。<br>
+      · <strong>B正确</strong>：语义分块（按句号、段落、标题等）保持语义完整性，检索质量更高。<br>
+      · <strong>C错误</strong>：整文档作为chunk太长，向量化时信息稀释严重，检索精度很低，且超过模型输入限制。<br>
+      · <strong>D正确</strong>：Small-to-Big策略用小chunk做精确检索（如128 token），检索命中后取其父大chunk（如512 token）送给LLM，兼顾检索精度和上下文完整性，是高级RAG技巧之一。
+    </div>
+  </div>
+</div>
+
+<!-- Q20 多选 -->
+<div class="question-card multi">
+  <div class="q-header">
+    <div class="q-num">20</div>
+    <div class="q-text">以下哪些属于高级RAG（Advanced RAG）的优化技术？<span class="type-badge">多选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. Query Rewriting（查询改写）：将用户问题扩写或改写成多个子问题</li>
+    <li>B. HyDE（假设文档扩展）：让LLM先生成一个假设答案，用假设答案的向量去检索</li>
+    <li>C. 直接增大向量数据库的存储容量</li>
+    <li>D. Self-RAG：模型自主决定是否需要检索，并对检索结果进行反思和评估</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：A、B、D</div>
+    <div class="answer-text">
+      · <strong>A：Query Rewriting</strong>：原始问题向量和真实文档向量可能不在同一语义空间（用户说"怎么登录"，文档写"用户认证流程"），改写/扩展query可以提高召回率。<br>
+      · <strong>B：HyDE</strong>：先让LLM生成一段"假设性的答案文本"，这段文本和真实文档更接近（都是答案视角），用它去检索往往比原始问题召回更准。<br>
+      · <strong>C：错误</strong>，增大存储容量是运维操作，不是RAG优化技术。<br>
+      · <strong>D：Self-RAG</strong>：训练模型生成特殊token来自主决定是否检索（<span class="key">[Retrieve]</span>）、评估检索相关性（<span class="key">[Relevant]</span>）和答案质量（<span class="key">[Supported]</span>），是一种自适应RAG框架。
+    </div>
+  </div>
+</div>
+
+<!-- Q21 简答 -->
+<div class="question-card short">
+  <div class="q-header">
+    <div class="q-num">21</div>
+    <div class="q-text">RAG中如何评估检索质量？请列举常用的评估指标并解释含义。<span class="type-badge">简答</span></div>
+  </div>
+  <div class="answer-block">
+    <div class="answer-label">✅ 参考答案</div>
+    <div class="answer-text">
+      常用RAG检索评估指标：<br><br>
+      <strong>1. 召回率（Recall@K）：</strong>在TopK检索结果中，有多少比例的相关文档被找到。衡量检索的"不漏"能力。<br>
+      <strong>2. 精确率（Precision@K）：</strong>TopK结果中，有多少是真正相关的。衡量检索的"不错"能力。<br>
+      <strong>3. MRR（平均倒数排名）：</strong>第一个相关文档排在第几位，越靠前越好。MRR = 平均(1/rank)。<br>
+      <strong>4. NDCG（归一化折损累积增益）：</strong>考虑相关性分级（高相关、低相关）和排名位置的综合指标，更全面。<br>
+      <strong>5. Context Relevance（上下文相关性）：</strong>用LLM对检索片段与问题的相关性打分，自动化评估（RAGAS框架）。<br><br>
+      框架推荐：<strong>RAGAS</strong>是专门针对RAG的评估框架，提供了Faithfulness（忠实性）、Answer Relevance（答案相关性）、Context Recall等多维度自动化评估。
+    </div>
+  </div>
+</div>
+
+<!-- Q22 简答 -->
+<div class="question-card short">
+  <div class="q-header">
+    <div class="q-num">22</div>
+    <div class="q-text">Embedding模型在RAG中的作用是什么？请说明Bi-Encoder和Cross-Encoder的区别及各自适用场景。<span class="type-badge">简答</span></div>
+  </div>
+  <div class="answer-block">
+    <div class="answer-label">✅ 参考答案</div>
+    <div class="answer-text">
+      <strong>Embedding模型的作用：</strong>将文本（Query和文档块）转换为固定维度的稠密向量，使语义相似的文本在向量空间中距离近，从而支持向量检索。<br><br>
+      <strong>Bi-Encoder（双编码器）：</strong><br>
+      · Query和Document分别独立编码成向量，检索时计算余弦相似度<br>
+      · 优点：Document向量可离线预计算存入数据库，检索时极快（毫秒级）<br>
+      · 缺点：Query和Document没有交互，语义匹配不够精细<br>
+      · 适用场景：<strong>第一阶段粗召回</strong>，从百万文档中快速召回TopK候选<br><br>
+      <strong>Cross-Encoder（交叉编码器）：</strong><br>
+      · 将Query和Document拼接后一起输入模型，输出相关性分数<br>
+      · 优点：Query和Document充分交互，精度高<br>
+      · 缺点：每次检索都需要对所有候选重新计算，速度慢，无法离线建索引<br>
+      · 适用场景：<strong>第二阶段精排（Reranker）</strong>，对Bi-Encoder召回的小量候选进行精细打分
+    </div>
+  </div>
+</div>
+
+<!-- Q23 单选 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">23</div>
+    <div class="q-text">在RAG中，出现"答案在检索到的文档中，但模型没有正确提取"的问题，可能原因是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. Embedding模型质量不足，检索召回的文档不相关</li>
+    <li>B. 检索到的相关文档过多，导致LLM在长上下文中出现"Lost in the Middle"问题</li>
+    <li>C. 文档切块太小，每个chunk信息量不足</li>
+    <li>D. 向量数据库索引构建错误</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      <strong>Lost in the Middle</strong>现象：研究表明，LLM在处理长上下文时，对文档<strong>开头和结尾</strong>的内容关注度高，对<strong>中间</strong>的关键信息容易忽略。<br>
+      如果检索到10个chunk，关键信息在第5个，模型可能无法有效利用。<br>
+      解决方法：<br>
+      · 减少送给LLM的chunk数量（精排后只送3-5个）<br>
+      · 重要chunk放在Prompt的开头或结尾<br>
+      · 对检索结果进行摘要压缩（Contextual Compression）
+    </div>
+  </div>
+</div>
+
+<!-- Q24 单选 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">24</div>
+    <div class="q-text">Graph RAG相比传统RAG的主要优势是什么？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 检索速度更快</li>
+    <li>B. 能够处理需要跨文档推理和理解实体关系的复杂问题</li>
+    <li>C. 减少了对向量数据库的依赖</li>
+    <li>D. 支持多模态输入</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      传统RAG只检索文本片段，难以回答需要<strong>多跳推理</strong>（multi-hop）的问题（如"A公司的CEO和B公司的CEO是否有合作关系？"需要跨多篇文档推理）。<br>
+      <strong>Graph RAG</strong>（微软研究）：<br>
+      1. 从文档中抽取实体和关系，构建知识图谱<br>
+      2. 对社区进行摘要，建立层次化的知识结构<br>
+      3. 检索时沿图的关系游走，支持复杂推理<br><br>
+      适用于需要理解文档中实体关系网络的复杂问答，如企业知识库、科研文献分析等。代价是构建成本高，速度慢。
+    </div>
+  </div>
+</div>
+
+<!-- Q25 单选 -->
+<div class="question-card single">
+  <div class="q-header">
+    <div class="q-num">25</div>
+    <div class="q-text">RAG中出现"幻觉"（Hallucination）的主要表现和根本原因是？<span class="type-badge">单选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 模型回答速度太慢，表现为超时错误</li>
+    <li>B. 模型生成的答案与检索到的文档内容不符，或编造了文档中不存在的信息</li>
+    <li>C. 向量数据库中没有存入足够多的文档</li>
+    <li>D. Embedding模型维度不够高</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：B</div>
+    <div class="answer-text">
+      RAG中幻觉有两种类型：<br>
+      1. <strong>检索失败型：</strong>检索到的文档不相关，模型依赖自身参数记忆生成答案，可能与事实不符<br>
+      2. <strong>生成失忠型：</strong>检索到了相关文档，但模型生成时没有忠实依据文档，添加了文档中没有的内容<br><br>
+      <strong>评估指标：Faithfulness（忠实性）</strong>衡量生成答案是否能被检索文档支撑。<br>
+      <strong>缓解方法：</strong>在System Prompt中明确指示"只根据以下文档回答，如果文档中没有则说不知道"；使用RLHF让模型更倾向于说"不知道"而非编造。
+    </div>
+  </div>
+</div>
+
+<!-- Q26 多选 -->
+<div class="question-card multi">
+  <div class="q-header">
+    <div class="q-num">26</div>
+    <div class="q-text">关于向量相似度计算，下列说法正确的有？<span class="type-badge">多选</span></div>
+  </div>
+  <ul class="options">
+    <li>A. 余弦相似度衡量的是两个向量方向的相似性，与向量长度无关</li>
+    <li>B. 对于归一化的向量，余弦相似度等价于点积（内积）</li>
+    <li>C. 欧氏距离和余弦相似度在所有场景下效果相同，可以互换使用</li>
+    <li>D. 大多数Embedding模型输出的向量已经L2归一化，直接用点积计算效率最高</li>
+  </ul>
+  <div class="answer-block">
+    <div class="answer-label">✅ 正确答案：A、B、D</div>
+    <div class="answer-text">
+      · <strong>A正确</strong>：余弦相似度 = A·B / (|A|×|B|)，只看方向，不看长度。<br>
+      · <strong>B正确</strong>：当|A|=|B|=1时，余弦相似度 = A·B，可以用矩阵乘法高效计算。<br>
+      · <strong>C错误</strong>：欧氏距离考虑向量长度，余弦相似度不考虑。对于文本向量（长短文本向量模长差异大），余弦相似度通常更合适；对于归一化向量则等价。<br>
+      · <strong>D正确</strong>：主流Embedding模型（BGE、OpenAI Ada等）输出时已做L2归一化，向量数据库用内积（FAISS的IndexFlatIP）即可，计算最快。
+    </div>
+  </div>
+</div>
+
+</div><!-- end section-wrap -->
+</div><!-- end s2 -->
+
+</div><!-- end container -->
+</body>
+</html>
