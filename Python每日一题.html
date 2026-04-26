@@ -142,7 +142,7 @@
     const questions = [
         { text: "下面代码的输出结果是？", code: "x = 5\ny = 3\nprint(x // y, x % y)", options: ["A) 1 2", "B) 1.666 2", "C) 2 1", "D) 1 1"], answer: "A", explanation: "// 是整数除法，5//3=1；% 是取余，5%3=2。" },
         { text: "执行以下代码，最终 a 的值是？", code: "a = 10\na += 5*2", options: ["A) 20", "B) 30", "C) 25", "D) 15"], answer: "A", explanation: "5*2=10, a+=10 即 a=10+10=20。" },
-        { text: "下面哪个选项的输出为 True？", code: "print(2 ** 3 == 8)", options: ["A) True", "B) False", "C) 8", "D) 报错"], answer: "A", explanation: "2**3=8，8==8 结果为 True。" },
+        { text: "下面哪个选项的输出为？", code: "print(2 ** 3 == 8)", options: ["A) True", "B) False", "C) 8", "D) 报错"], answer: "A", explanation: "2**3=8，8==8 结果为 True。" },
         { text: "下列代码运行结果是？", code: "s = 'Python'\nprint(s[-1])", options: ["A) n", "B) P", "C) o", "D) 索引错误"], answer: "A", explanation: "索引 -1 表示最后一个字符，'Python' 最后一个字母是 n。" },
         { text: "关于列表切片，以下输出正确的是？", code: "lst = [0,1,2,3,4]\nprint(lst[1:4])", options: ["A) [1,2,3]", "B) [1,2,3,4]", "C) [0,1,2,3]", "D) [1,2]"], answer: "A", explanation: "切片 [start:end] 包含 start 不包含 end，索引1到3得到 [1,2,3]。" },
         { text: "下列代码的输出是？", code: "for i in range(3):\n    print(i, end=' ')", options: ["A) 0 1 2", "B) 1 2 3", "C) 0 1 2 3", "D) 0 1"], answer: "A", explanation: "range(3) 生成 0,1,2，不包含 3。" },
