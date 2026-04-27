@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Transformer 面试题库 - 交互版</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; position: relative; z-index: 1; }
+        .hero p { font-size: 1rem; opacity: 0.9; position: relative; z-index: 1; }
+        .stats-bar {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat { text-align: center; }
+        .stat .num { font-size: 1.8rem; font-weight: bold; color: #667eea; }
+        .stat .label { font-size: 0.8rem; color: #888; }
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            height: 6px;
+            border-radius: 3px;
+            margin: 20px auto;
+            max-width: 600px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102,126,234,0.4); }
+        .nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+        }
+        .nav a {
+            text-decoration: none;
+            color: #667eea;
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #667eea;
+            transition: all 0.3s;
+            background: rgba(102,126,234,0.1);
+        }
+        .nav a:hover, .nav a.active { background: #667eea; color: white; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 15px 25px;
+            border-radius: 15px 15px 0 0;
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+        .s1 { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .s2 { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .s3 { background: linear-gradient(90deg, #43e97b, #38f9d7); color: #1a5a3a !important; }
+        .s4 { background: linear-gradient(90deg, #fa709a, #fee140); color: #5a3a1a !important; }
+        .s5 { background: linear-gradient(90deg, #a18cd1, #fbc2eb); }
+        .s6 { background: linear-gradient(90deg, #ffecd2, #fcb69f); color: #5a3a1a !important; }
+        .section-wrap {
+            background: rgba(255,255,255,0.05);
+            border-radius: 0 0 15px 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .question-card {
+            padding: 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            transition: all 0.3s;
+        }
+        .question-card:last-child { border-bottom: none; }
+        .question-card.answered { background: rgba(255,255,255,0.03); }
+        .question-card.correct { border-left: 4px solid #43e97b; }
+        .question-card.wrong { border-left: 4px solid #f5576c; }
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .q-num {
+            min-width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            color: white;
+        }
+        .single .q-num { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .multi .q-num { background: linear-gradient(135deg, #f5576c, #f093fb); }
+        .short .q-num { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a5a3a; }
+        .type-badge {
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .single .type-badge { background: rgba(102,126,234,0.3); color: #a8b5f0; }
+        .multi .type-badge { background: rgba(245,87,108,0.3); color: #f5a8b5; }
+        .short .type-badge { background: rgba(67,233,123,0.3); color: #a8f5c5; }
+        .q-text { font-size: 1.05rem; line-height: 1.7; font-weight: 500; }
+        .options { margin: 15px 0 15px 55px; }
+        .option {
+            list-style: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .option:hover:not(.disabled) {
+            background: rgba(102,126,234,0.15);
+            border-color: rgba(102,126,234,0.5);
+        }
+        .option.selected {
+            background: rgba(102,126,234,0.25);
+            border-color: #667eea;
+        }
+        .option.correct-answer {
+            background: rgba(67,233,123,0.25) !important;
+            border-color: #43e97b !important;
+        }
+        .option.wrong-answer {
+            background: rgba(245,87,108,0.25) !important;
+            border-color: #f5576c !important;
+        }
+        .option.disabled { cursor: not-allowed; opacity: 0.7; }
+        .option-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .option.selected .option-marker { background: #667eea; border-color: #667eea; }
+        .submit-btn {
+            margin: 15px 0 15px 55px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .answer-block {
+            margin: 15px 0 0 55px;
+            background: linear-gradient(135deg, rgba(103,233,123,0.1), rgba(56,249,215,0.1));
+            border-radius: 12px;
+            padding: 18px 20px;
+            border-left: 4px solid #43e97b;
+            display: none;
+        }
+        .answer-block.show { display: block; animation: slideDown 0.3s ease; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .result-correct { background: rgba(67,233,123,0.3); color: #43e97b; }
+        .result-wrong { background: rgba(245,87,108,0.3); color: #f5576c; }
+        .answer-label {
+            font-weight: bold;
+            color: #43e97b;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        .answer-text {
+            color: #c0c0c0;
+            font-size: 0.92rem;
+            line-height: 1.8;
+        }
+        .answer-text strong { color: #f5576c; }
+        .answer-text .key {
+            background: rgba(255,183,77,0.2);
+            color: #ffb74d;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.88rem;
+        }
+        .short-answer-input {
+            margin: 15px 0 15px 55px;
+            width: calc(100% - 55px);
+            min-height: 100px;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .short-answer-input:focus { outline: none; border-color: #667eea; }
+        .short-answer-input:disabled { opacity: 0.6; }
+        .tip {
+            background: rgba(255,183,77,0.1);
+            border: 1px solid rgba(255,183,77,0.3);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #ffb74d;
+        }
+        .tip strong { color: #ffd54f; }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal-content h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .score-display {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #43e97b;
+            margin: 20px 0;
+        }
+        .modal-content p { color: #888; margin-bottom: 25px; }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.5rem; }
+            .options, .submit-btn, .answer-block, .short-answer-input { margin-left: 0; }
+            .short-answer-input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>🤖 Transformer 面试题库</h1>
+    <p>40道精选题目 · 交互做题 · 即时反馈 · 详细解析</p>
+</div>
+
+<div class="stats-bar">
+    <div class="stat"><div class="num" id="total-num">0</div><div class="label">总题数</div></div>
+    <div class="stat"><div class="num" id="answered-num">0</div><div class="label">已答</div></div>
+    <div class="stat"><div class="num" id="correct-num">0</div><div class="label">正确</div></div>
+    <div class="stat"><div class="num" id="score-num">0%</div><div class="label">正确率</div></div>
+</div>
+
+<div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+</div>
+
+<div class="controls">
+    <button class="btn btn-primary" onclick="checkAllAnswers()">✅ 提交所有答案</button>
+    <button class="btn btn-secondary" onclick="resetAll()">🔄 全部重做</button>
+    <button class="btn btn-secondary" onclick="showAllAnswers()">👁️ 显示全部解析</button>
+</div>
+
+<div class="nav">
+    <a href="#s1" class="active">📐 整体架构</a>
+    <a href="#s2">🎯 注意力机制</a>
+    <a href="#s3">📍 位置编码</a>
+    <a href="#s4">🏋️ 训练技巧</a>
+    <a href="#s5">⚡ 推理优化</a>
+    <a href="#s6">🔄 变体演进</a>
+</div>
+
+<div class="container">
+
+<div class="tip">
+    <strong>📌 做题指南：</strong>点击选项选择答案 → 点击「提交答案」查看对错 → 展开解析学习知识点。单选题 🔵，多选题 🔴，简答题 🟢。加油！💪
+</div>
+
+<!-- 第一部分：整体架构 -->
+<div id="s1">
+<div class="section-title s1">📐 第一部分：整体架构（7题）</div>
+<div class="section-wrap">
+
+<div class="question-card single" data-id="1" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">1</div>
+        <div class="q-text">Transformer 架构最初是为哪个任务设计的？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>图像分类</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>机器翻译</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>语音识别</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>文本生成</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(1)">提交答案</button>
+    <div class="answer-block" id="answer-1">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            Transformer 于 2017 年在论文 <span class="key">"Attention Is All You Need"</span> 中提出，最初用于<strong>机器翻译</strong>任务。核心创新是完全基于注意力机制，摒弃了 RNN/LSTM 的循环结构，实现了并行计算。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="2" data-type="single" data-answer="C">
+    <div class="q-header">
+        <div class="q-num">2</div>
+        <div class="q-text">标准的 Transformer 编码器-解码器架构中，下列哪部分<strong>只存在于解码器</strong>中？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>多头自注意力</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>前馈神经网络</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Masked Self-Attention</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>Layer Normalization</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(2)">提交答案</button>
+    <div class="answer-block" id="answer-2">
+        <div class="answer-label">✅ 正确答案：C</div>
+        <div class="answer-text">
+            <strong>Masked Self-Attention</strong> 是解码器特有的机制。在自回归生成时，解码器只能看到当前位置及之前的 token，不能"偷看"未来的 token。实现方式：将未来位置的注意力分数设为 <span class="key">-∞</span>。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="3" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">3</div>
+        <div class="q-text">BERT 使用的是 Transformer 的哪部分结构？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>仅解码器</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>仅编码器</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>完整的编码器-解码器</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>编码器+部分解码器</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(3)">提交答案</button>
+    <div class="answer-block" id="answer-3">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <strong>BERT</strong> 使用 <span class="key">Encoder-only</span> 结构。三种典型架构：Encoder-only（BERT）适合理解任务；Decoder-only（GPT）适合生成任务；Encoder-Decoder（T5）适合翻译、摘要。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="4" data-type="single" data-answer="A">
+    <div class="q-header">
+        <div class="q-num">4</div>
+        <div class="q-text">GPT 系列模型使用的是哪种架构？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Decoder-only</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>Encoder-only</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Encoder-Decoder</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>双向编码器</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(4)">提交答案</button>
+    <div class="answer-block" id="answer-4">
+        <div class="answer-label">✅ 正确答案：A</div>
+        <div class="answer-text">
+            <strong>GPT</strong> 使用 <span class="key">Decoder-only</span> 架构，使用 Masked Self-Attention 只能看到左侧上下文，自回归生成。目前主流大模型（GPT-4、LLaMA、Qwen）都采用此架构。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="5" data-type="multi" data-answer="A,B,D">
+    <div class="q-header">
+        <div class="q-num">5</div>
+        <div class="q-text">Transformer 相比 RNN/LSTM 的主要优势有哪些？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>可以并行计算，训练速度快</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>长距离依赖建模能力强</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>参数量更少，模型更小</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>不存在梯度消失/爆炸问题</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(5)">提交答案</button>
+    <div class="answer-block" id="answer-5">
+        <div class="answer-label">✅ 正确答案：A、B、D</div>
+        <div class="answer-text">
+            · <strong>A</strong>：RNN 必须顺序计算，Transformer 可并行<br>
+            · <strong>B</strong>：自注意力直接连接任意位置，距离为 O(1)<br>
+            · <strong>C 错误</strong>：Transformer 参数量通常更大<br>
+            · <strong>D</strong>：残差连接 + LayerNorm 缓解梯度问题
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="6" data-type="multi" data-answer="B,C,D">
+    <div class="q-header">
+        <div class="q-num">6</div>
+        <div class="q-text">下列哪些是 Transformer 编码器层的组成部分？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Masked Multi-Head Attention</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>Multi-Head Self-Attention</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Position-wise FFN</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>Add & LayerNorm</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(6)">提交答案</button>
+    <div class="answer-block" id="answer-6">
+        <div class="answer-label">✅ 正确答案：B、C、D</div>
+        <div class="answer-text">
+            编码器层包含：Multi-Head Self-Attention、Position-wise FFN，每个子层都有残差连接和层归一化。Masked Multi-Head Attention 是解码器特有的。
+        </div>
+    </div>
+</div>
+
+<div class="question-card short" data-id="7" data-type="short">
+    <div class="q-header">
+        <div class="q-num">7</div>
+        <div class="q-text">简述 Transformer 中残差连接和层归一化的作用。<span class="type-badge">简答</span></div>
+    </div>
+    <textarea class="short-answer-input" id="input-7" placeholder="请在此输入你的答案..."></textarea>
+    <button class="submit-btn" onclick="checkAnswer(7)">提交答案</button>
+    <div class="answer-block" id="answer-7">
+        <div class="answer-label">✅ 参考答案</div>
+        <div class="answer-text">
+            <strong>残差连接</strong>：公式 <span class="key">output = x + Sublayer(x)</span>，缓解梯度消失，支持深层网络训练。<br><br>
+            <strong>层归一化</strong>：对每个样本的特征维度归一化，稳定训练，加速收敛。
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- 第二部分：注意力机制 -->
+<div id="s2">
+<div class="section-title s2">🎯 第二部分：注意力机制（7题）</div>
+<div class="section-wrap">
+
+<div class="question-card single" data-id="8" data-type="single" data-answer="C">
+    <div class="q-header">
+        <div class="q-num">8</div>
+        <div class="q-text">Scaled Dot-Product Attention 中的 "Scaled" 是指？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>对 Q 和 K 做归一化</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>对 V 做缩放</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>将 Q·K^T 除以 √d_k</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>对注意力权重做 softmax</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(8)">提交答案</button>
+    <div class="answer-block" id="answer-8">
+        <div class="answer-label">✅ 正确答案：C</div>
+        <div class="answer-text">
+            公式：<span class="key">Attention(Q,K,V) = softmax(QK^T / √d_k) V</span>。除以 √d_k 防止点积值过大导致 softmax 进入梯度饱和区。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="9" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">9</div>
+        <div class="q-text">Multi-Head Attention 中，d_model=512，头数 h=8，每个头的维度 d_k 是多少？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>512</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>64</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>8</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>4096</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(9)">提交答案</button>
+    <div class="answer-block" id="answer-9">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <span class="key">d_k = d_model / h = 512 / 8 = 64</span>。每个头独立计算注意力，8 个头输出拼接后经过线性变换得到最终输出。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="10" data-type="single" data-answer="A">
+    <div class="q-header">
+        <div class="q-num">10</div>
+        <div class="q-text">自注意力机制中，Q、K、V 分别来自哪里？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>都来自同一个输入序列，通过不同的线性变换得到</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>Q 来自解码器，K 和 V 来自编码器</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Q 和 K 来自输入，V 是外部引入的</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>Q、K、V 是三个独立的输入序列</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(10)">提交答案</button>
+    <div class="answer-block" id="answer-10">
+        <div class="answer-label">✅ 正确答案：A</div>
+        <div class="answer-text">
+            Self-Attention 中 Q、K、V 都来自<strong>同一个输入序列</strong>：Q = X·W_Q，K = X·W_K，V = X·W_V。Cross-Attention 中 Q 来自解码器，K、V 来自编码器。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="11" data-type="single" data-answer="C">
+    <div class="q-header">
+        <div class="q-num">11</div>
+        <div class="q-text">标准 Self-Attention 的计算复杂度是多少？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>O(n × d)</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>O(n × d²)</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>O(n² × d)</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>O(n² × d²)</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(11)">提交答案</button>
+    <div class="answer-block" id="answer-11">
+        <div class="answer-label">✅ 正确答案：C</div>
+        <div class="answer-text">
+            计算 QK^T 是 n×d 乘 d×n，得到 n×n 矩阵，复杂度 <span class="key">O(n²d)</span>。序列长度的平方是瓶颈，长序列时 n² 非常大。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="12" data-type="multi" data-answer="A,B,C">
+    <div class="q-header">
+        <div class="q-num">12</div>
+        <div class="q-text">Multi-Head Attention 相比单头注意力的优势有哪些？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>不同头可以关注不同的特征子空间</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>增强模型的表达能力</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>可以并行计算，效率不降低</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>减少模型参数量</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(12)">提交答案</button>
+    <div class="answer-block" id="answer-12">
+        <div class="answer-label">✅ 正确答案：A、B、C</div>
+        <div class="answer-text">
+            不同头学到不同的注意力模式（句法、语义等），增强表达能力，且可并行计算。但会增加参数量而非减少。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="13" data-type="multi" data-answer="B,D">
+    <div class="q-header">
+        <div class="q-num">13</div>
+        <div class="q-text">关于 Attention 机制，下列说法正确的有？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Attention 权重矩阵是对称的</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>Softmax 保证每行注意力权重之和为 1</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Attention 与 token 距离无关</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>Decoder 使用上三角 mask 防止看到未来信息</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(13)">提交答案</button>
+    <div class="answer-block" id="answer-13">
+        <div class="answer-label">✅ 正确答案：B、D</div>
+        <div class="answer-text">
+            Attention 矩阵不对称；Softmax 定义就是归一化；Decoder 使用上三角 mask（causal mask）保证自回归特性。
+        </div>
+    </div>
+</div>
+
+<div class="question-card short" data-id="14" data-type="short">
+    <div class="q-header">
+        <div class="q-num">14</div>
+        <div class="q-text">解释什么是 Cross-Attention，并说明它在 Transformer 中的使用场景。<span class="type-badge">简答</span></div>
+    </div>
+    <textarea class="short-answer-input" id="input-14" placeholder="请在此输入你的答案..."></textarea>
+    <button class="submit-btn" onclick="checkAnswer(14)">提交答案</button>
+    <div class="answer-block" id="answer-14">
+        <div class="answer-label">✅ 参考答案</div>
+        <div class="answer-text">
+            <strong>Cross-Attention</strong>：Q 来自一个序列，K 和 V 来自另一个序列。在 Encoder-Decoder 架构中，解码器通过 Cross-Attention 查询编码器的输出，实现源语言和目标语言的对齐。
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- 第三部分：位置编码 -->
+<div id="s3">
+<div class="section-title s3">📍 第三部分：位置编码（7题）</div>
+<div class="section-wrap">
+
+<div class="question-card single" data-id="15" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">15</div>
+        <div class="q-text">为什么 Transformer 需要位置编码？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>为了减少模型参数量</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>因为 Self-Attention 本身不包含位置信息</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>为了加速训练收敛</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>为了增加非线性表达能力</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(15)">提交答案</button>
+    <div class="answer-block" id="answer-15">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            Self-Attention 是<strong>位置无关</strong>的，交换 token 位置输出只是对应交换。模型不知道 token 在序列中的位置，而位置信息对理解句子至关重要。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="16" data-type="single" data-answer="C">
+    <div class="q-header">
+        <div class="q-num">16</div>
+        <div class="q-text">原始 Transformer 使用的是哪种位置编码？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>可学习的位置嵌入</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>RoPE</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>正弦/余弦位置编码</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>ALiBi</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(16)">提交答案</button>
+    <div class="answer-block" id="answer-16">
+        <div class="answer-label">✅ 正确答案：C</div>
+        <div class="answer-text">
+            原始 Transformer 使用 <span class="key">Sinusoidal Positional Encoding</span>，不需要学习参数，可以处理比训练时更长的序列。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="17" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">17</div>
+        <div class="q-text">RoPE（旋转位置编码）的核心思想是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>在输入嵌入层直接加上位置向量</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>通过旋转矩阵将位置信息编码到 Q、K 的点积中</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>使用可学习的参数表示位置</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>在注意力分数上添加距离偏置</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(17)">提交答案</button>
+    <div class="answer-block" id="answer-17">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <strong>RoPE</strong> 对 Q、K 做旋转变换，使得 attention 分数自动包含相对位置信息。被 LLaMA、Qwen 等模型采用。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="18" data-type="single" data-answer="A">
+    <div class="q-header">
+        <div class="q-num">18</div>
+        <div class="q-text">ALiBi 的位置编码方式是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>在注意力分数上添加与距离成线性关系的负偏置</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>使用正弦函数编码位置</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>通过旋转矩阵编码位置</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>使用可学习的位置嵌入</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(18)">提交答案</button>
+    <div class="answer-block" id="answer-18">
+        <div class="answer-label">✅ 正确答案：A</div>
+        <div class="answer-text">
+            <strong>ALiBi</strong> 不在输入中加位置编码，而是在 attention score 上加与距离相关的负偏置，具有极强的长度外推能力。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="19" data-type="multi" data-answer="A,B,D">
+    <div class="q-header">
+        <div class="q-num">19</div>
+        <div class="q-text">关于绝对位置编码和相对位置编码，下列说法正确的有？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>绝对位置编码为每个位置分配唯一的编码向量</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>相对位置编码编码的是两个位置之间的距离关系</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>绝对位置编码的外推性一定比相对位置编码好</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>RoPE 是一种相对位置编码</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(19)">提交答案</button>
+    <div class="answer-block" id="answer-19">
+        <div class="answer-label">✅ 正确答案：A、B、D</div>
+        <div class="answer-text">
+            相对位置编码通常外推性更好，而非绝对位置编码。RoPE 通过旋转操作实现了相对位置编码。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="20" data-type="multi" data-answer="B,C">
+    <div class="q-header">
+        <div class="q-num">20</div>
+        <div class="q-text">现代大模型常用的位置编码有哪些？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>原始正弦位置编码</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>RoPE</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>可学习位置嵌入</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>不使用位置编码</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(20)">提交答案</button>
+    <div class="answer-block" id="answer-20">
+        <div class="answer-label">✅ 正确答案：B、C</div>
+        <div class="answer-text">
+            RoPE（LLaMA、Qwen）、可学习位置嵌入（GPT-4、Claude）是主流选择。原始正弦编码主要用于教学。
+        </div>
+    </div>
+</div>
+
+<div class="question-card short" data-id="21" data-type="short">
+    <div class="q-header">
+        <div class="q-num">21</div>
+        <div class="q-text">什么是长度外推性？为什么它对大模型很重要？<span class="type-badge">简答</span></div>
+    </div>
+    <textarea class="short-answer-input" id="input-21" placeholder="请在此输入你的答案..."></textarea>
+    <button class="submit-btn" onclick="checkAnswer(21)">提交答案</button>
+    <div class="answer-block" id="answer-21">
+        <div class="answer-label">✅ 参考答案</div>
+        <div class="answer-text">
+            <strong>长度外推性</strong>：模型处理超过训练时最大长度序列的能力。重要是因为训练只能用有限长度（如 4K），但推理时用户可能输入更长文本（如 100K）。RoPE、ALiBi 等具有良好外推性。
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<script>
+// 题目数据
+const questions = {};
+let answeredCount = 0;
+let correctCount = 0;
+
+// 初始化 - 使用 DOMContentLoaded 确保 DOM 完全加载
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing...');
+    initQuestions();
+    updateStats();
+    bindOptionClicks();
+    bindNavClicks();
+});
+
+// 绑定选项点击事件
+function bindOptionClicks() {
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        const type = card.dataset.type;
+        
+        if (type === 'single' || type === 'multi') {
+            card.querySelectorAll('.option').forEach(opt => {
+                opt.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (this.classList.contains('disabled')) return;
+                    
+                    if (type === 'single') {
+                        card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                        this.classList.add('selected');
+                    } else {
+                        this.classList.toggle('selected');
+                    }
+                });
+            });
+        }
+    });
+}
+
+// 绑定导航点击
+function bindNavClicks() {
+    document.querySelectorAll('.nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.nav a').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+}
+
+function initQuestions() {
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        const type = card.dataset.type;
+        const answer = card.dataset.answer;
+        questions[id] = { type, answer, answered: false, correct: false };
+    });
+}
+
+function checkAnswer(id) {
+    const card = document.querySelector(`.question-card[data-id="${id}"]`);
+    const type = card.dataset.type;
+    const correctAnswer = card.dataset.answer;
+    
+    if (questions[id].answered) return;
+    
+    let userAnswer = '';
+    let isCorrect = false;
+    
+    if (type === 'single' || type === 'multi') {
+        const selected = card.querySelectorAll('.option.selected');
+        if (selected.length === 0) {
+            alert('请先选择答案！');
+            return;
+        }
+        userAnswer = Array.from(selected).map(o => o.dataset.value).join(',');
+        
+        if (type === 'single') {
+            isCorrect = userAnswer === correctAnswer;
+        } else {
+            const userSet = new Set(userAnswer.split(','));
+            const correctSet = new Set(correctAnswer.split(','));
+            isCorrect = userSet.size === correctSet.size && 
+                       [...userSet].every(x => correctSet.has(x));
+        }
+        
+        // 显示对错样式
+        card.querySelectorAll('.option').forEach(opt => {
+            opt.classList.add('disabled');
+            const val = opt.dataset.value;
+            if (correctAnswer.includes(val)) {
+                opt.classList.add('correct-answer');
+            } else if (opt.classList.contains('selected')) {
+                opt.classList.add('wrong-answer');
+            }
+        });
+    } else if (type === 'short') {
+        const input = document.getElementById(`input-${id}`);
+        if (!input.value.trim()) {
+            alert('请先输入答案！');
+            return;
+        }
+        input.disabled = true;
+        isCorrect = true; // 简答题默认正确，主要看解析
+    }
+    
+    // 显示答案解析
+    document.getElementById(`answer-${id}`).classList.add('show');
+    
+    // 更新状态
+    questions[id].answered = true;
+    questions[id].correct = isCorrect;
+    card.classList.add('answered');
+    card.classList.add(isCorrect ? 'correct' : 'wrong');
+    
+    // 添加结果标签
+    const answerBlock = document.getElementById(`answer-${id}`);
+    const existingBadge = answerBlock.querySelector('.result-badge');
+    if (!existingBadge) {
+        const badge = document.createElement('div');
+        badge.className = `result-badge ${isCorrect ? 'result-correct' : 'result-wrong'}`;
+        badge.innerHTML = isCorrect ? '✅ 回答正确' : '❌ 回答错误';
+        answerBlock.insertBefore(badge, answerBlock.firstChild);
+    }
+    
+    // 禁用提交按钮
+    card.querySelector('.submit-btn').disabled = true;
+    
+    updateStats();
+}
+
+function updateStats() {
+    const total = Object.keys(questions).length;
+    answeredCount = Object.values(questions).filter(q => q.answered).length;
+    correctCount = Object.values(questions).filter(q => q.correct).length;
+    
+    document.getElementById('total-num').textContent = total;
+    document.getElementById('answered-num').textContent = answeredCount;
+    document.getElementById('correct-num').textContent = correctCount;
+    
+    const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+    document.getElementById('score-num').textContent = percentage + '%';
+    
+    document.getElementById('progress-bar').style.width = (answeredCount / total * 100) + '%';
+}
+
+function checkAllAnswers() {
+    let hasUnanswered = false;
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        if (!questions[id].answered) {
+            hasUnanswered = true;
+            checkAnswer(id);
+        }
+    });
+    
+    if (!hasUnanswered) {
+        alert('所有题目已作答！正确率：' + document.getElementById('score-num').textContent);
+    }
+}
+
+function resetAll() {
+    if (!confirm('确定要重置所有答案吗？')) return;
+    
+    location.reload();
+}
+
+function showAllAnswers() {
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        document.getElementById(`answer-${id}`).classList.add('show');
+    });
+}
+
+// 导航高亮
+document.querySelectorAll('.nav a').forEach(link => {
+    link.addEventListener('click', function() {
+        document.querySelectorAll('.nav a').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+<!-- 第四部分：训练技巧 -->
+<div id="s4">
+<div class="section-title s4">🏋️ 第四部分：训练技巧（7题）</div>
+<div class="section-wrap">
+
+<div class="question-card single" data-id="22" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">22</div>
+        <div class="q-text">Pre-Norm 和 Post-Norm 的区别是什么？现代大模型多用哪种？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Pre-Norm 将 LayerNorm 放在子层之后，Post-Norm 放在之前</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>Pre-Norm 将 LayerNorm 放在子层之前，训练更稳定，现代大模型多用</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>两者效果完全相同，没有区别</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>Post-Norm 更适合深层模型</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(22)">提交答案</button>
+    <div class="answer-block" id="answer-22">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <strong>Pre-Norm</strong>：output = x + F(LN(x))，梯度流更稳定，现代大模型（GPT-3、LLaMA）都用。Post-Norm（原始 Transformer）：output = LN(x + F(x))，训练深层模型困难。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="23" data-type="single" data-answer="C">
+    <div class="q-header">
+        <div class="q-num">23</div>
+        <div class="q-text">Layer Normalization 和 Batch Normalization 的主要区别是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>LN 在 batch 维度归一化，BN 在特征维度归一化</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>LN 需要更大的 batch size</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>LN 在特征维度归一化，适合变长序列；BN 在 batch 维度，适合 CV</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>两者没有本质区别，可以互换</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(23)">提交答案</button>
+    <div class="answer-block" id="answer-23">
+        <div class="answer-label">✅ 正确答案：C</div>
+        <div class="answer-text">
+            <strong>LN</strong>：对每个样本的所有特征归一化，不依赖 batch 大小，适合 NLP 变长序列。<strong>BN</strong>：对 batch 内同一特征归一化，适合 CV 固定尺寸图像。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="24" data-type="single" data-answer="A">
+    <div class="q-header">
+        <div class="q-num">24</div>
+        <div class="q-text">Warmup 学习率策略在 Transformer 训练中的作用是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>训练初期从小学习率逐渐增大，防止早期梯度不稳定破坏预训练权重</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>训练后期逐渐减小学习率，精细调整参数</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>保持学习率恒定不变</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>随机变化学习率，增加训练随机性</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(24)">提交答案</button>
+    <div class="answer-block" id="answer-24">
+        <div class="answer-label">✅ 正确答案：A</div>
+        <div class="answer-text">
+            <strong>Warmup</strong>：前 N 步线性增加学习率，之后正常衰减。防止早期大学习率破坏 Attention 结构，是 Transformer 训练的标准配置。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="25" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">25</div>
+        <div class="q-text">Dropout 在 Transformer 中的主要作用是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>加速训练速度</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>防止过拟合，增强泛化能力</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>减少模型参数量</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>增加模型非线性</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(25)">提交答案</button>
+    <div class="answer-block" id="answer-25">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <strong>Dropout</strong>：随机丢弃部分神经元，防止模型过度依赖特定特征，减少过拟合。在大模型预训练中常用，但微调时可能降低或关闭。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="26" data-type="multi" data-answer="A,B,D">
+    <div class="q-header">
+        <div class="q-num">26</div>
+        <div class="q-text">关于 Transformer 训练优化器，下列说法正确的有？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Adam/AdamW 是训练 Transformer 的主流选择</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>AdamW 相比 Adam 对权重衰减的处理更正确</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>SGD 比 Adam 更适合训练 Transformer</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>学习率调度通常使用 Warmup + Cosine Decay</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(26)">提交答案</button>
+    <div class="answer-block" id="answer-26">
+        <div class="answer-label">✅ 正确答案：A、B、D</div>
+        <div class="answer-text">
+            Adam/AdamW 自适应学习率适合稀疏梯度；AdamW 解耦权重衰减和梯度更新；SGD 在 Transformer 上效果差；Warmup + Cosine Decay 是标准配置。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="27" data-type="multi" data-answer="A,C,D">
+    <div class="q-header">
+        <div class="q-num">27</div>
+        <div class="q-text">训练大模型时，常用的显存优化技术有哪些？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Gradient Checkpointing（梯度检查点）</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>增大 Batch Size</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Mixed Precision Training（混合精度训练）</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>ZeRO 优化器状态分片</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(27)">提交答案</button>
+    <div class="answer-block" id="answer-27">
+        <div class="answer-label">✅ 正确答案：A、C、D</div>
+        <div class="answer-text">
+            Gradient Checkpointing 用计算换显存；Mixed Precision（FP16/BF16）减少显存占用；ZeRO 将优化器状态分片到多卡。增大 Batch Size 会增加显存消耗。
+        </div>
+    </div>
+</div>
+
+<div class="question-card short" data-id="28" data-type="short">
+    <div class="q-header">
+        <div class="q-num">28</div>
+        <div class="q-text">解释 Gradient Checkpointing（梯度检查点）的原理和 trade-off。<span class="type-badge">简答</span></div>
+    </div>
+    <textarea class="short-answer-input" id="input-28" placeholder="请在此输入你的答案..."></textarea>
+    <button class="submit-btn" onclick="checkAnswer(28)">提交答案</button>
+    <div class="answer-block" id="answer-28">
+        <div class="answer-label">✅ 参考答案</div>
+        <div class="answer-text">
+            <strong>原理</strong>：只保存部分层的激活值（检查点），反向传播时从最近的检查点重新计算中间激活。<br><br>
+            <strong>Trade-off</strong>：显存减少约 30-50%，但训练时间增加约 20%（用计算换显存）。适合显存受限场景。
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- 第五部分：推理优化 -->
+<div id="s5">
+<div class="section-title s5">⚡ 第五部分：推理优化（6题）</div>
+<div class="section-wrap">
+
+<div class="question-card single" data-id="29" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">29</div>
+        <div class="q-text">KV Cache 的核心作用是什么？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>压缩模型权重，减少显存占用</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>缓存已生成 token 的 K、V，避免重复计算</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>将模型的注意力头数动态减少</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>将 Prompt 压缩成固定长度的向量</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(29)">提交答案</button>
+    <div class="answer-block" id="answer-29">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            自回归生成时，每步只需计算新 token 的 Q、K、V，历史的 K、V 从缓存读取。避免重复计算，大幅提升推理速度，代价是显存占用随序列长度增加。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="30" data-type="single" data-answer="C">
+    <div class="q-header">
+        <div class="q-num">30</div>
+        <div class="q-text">量化（Quantization）技术的主要目的是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>提高模型精度</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>增加模型参数量</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>降低权重精度，减少显存占用和加速推理</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>扩展模型上下文长度</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(30)">提交答案</button>
+    <div class="answer-block" id="answer-30">
+        <div class="answer-label">✅ 正确答案：C</div>
+        <div class="answer-text">
+            <strong>量化</strong>：将 FP32/FP16 权重转换为 INT8/INT4 等低精度，减少显存占用 50-75%，加速推理。GPTQ、AWQ、BitsAndBytes 是常用量化方法。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="31" data-type="single" data-answer="A">
+    <div class="q-header">
+        <div class="q-num">31</div>
+        <div class="q-text">Flash Attention 的核心优化思想是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>分块计算避免存储完整注意力矩阵，减少 HBM 读写</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>只计算部分 token 的注意力</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>将注意力复杂度从 O(n²) 降到 O(n)</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>使用稀疏注意力替代密集注意力</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(31)">提交答案</button>
+    <div class="answer-block" id="answer-31">
+        <div class="answer-label">✅ 正确答案：A</div>
+        <div class="answer-text">
+            Flash Attention 在 SRAM 中分块计算注意力，利用 Online Softmax 技巧，不存储完整 N×N 矩阵。IO 从 O(N²) 降到 O(N)，速度提升 2-4 倍。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="32" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">32</div>
+        <div class="q-text">Speculative Decoding（投机解码）的基本原理是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>使用更大的 batch size 加速</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>小模型快速生成草稿，大模型并行验证</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>减少模型层数</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>降低生成温度</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(32)">提交答案</button>
+    <div class="answer-block" id="answer-32">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <strong>投机解码</strong>：小 Draft 模型一次生成多个 token，Target 大模型并行验证，接受正确的部分，拒绝则重新生成。可将生成速度提升 2-3 倍。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="33" data-type="multi" data-answer="A,B,D">
+    <div class="q-header">
+        <div class="q-num">33</div>
+        <div class="q-text">关于大模型推理加速，下列说法正确的有？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Continuous Batching 允许不同请求共享 GPU，提升吞吐</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>PagedAttention 将 KV Cache 分页管理，减少显存碎片</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>量化会显著提高模型精度</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>GQA 减少 KV Cache 显存占用</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(33)">提交答案</button>
+    <div class="answer-block" id="answer-33">
+        <div class="answer-label">✅ 正确答案：A、B、D</div>
+        <div class="answer-text">
+            Continuous Batching（vLLM）动态调度请求；PagedAttention 类比操作系统内存分页；GQA 多个 Query 共享 K、V，减少 KV Cache。量化会轻微降低精度而非提高。
+        </div>
+    </div>
+</div>
+
+<div class="question-card short" data-id="34" data-type="short">
+    <div class="q-header">
+        <div class="q-num">34</div>
+        <div class="q-text">解释 Prefill 和 Decode 两个阶段在推理中的区别。<span class="type-badge">简答</span></div>
+    </div>
+    <textarea class="short-answer-input" id="input-34" placeholder="请在此输入你的答案..."></textarea>
+    <button class="submit-btn" onclick="checkAnswer(34)">提交答案</button>
+    <div class="answer-block" id="answer-34">
+        <div class="answer-label">✅ 参考答案</div>
+        <div class="answer-text">
+            <strong>Prefill</strong>：并行处理输入 Prompt，计算所有 token 的 KV 并缓存，生成第一个输出 token。计算密集，可并行。<br><br>
+            <strong>Decode</strong>：自回归逐 token 生成，每步只处理 1 个新 token，从 KV Cache 读取历史。内存密集，是推理瓶颈。
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- 第六部分：变体演进 -->
+<div id="s6">
+<div class="section-title s6">🔄 第六部分：变体演进（6题）</div>
+<div class="section-wrap">
+
+<div class="question-card single" data-id="35" data-type="single" data-answer="C">
+    <div class="q-header">
+        <div class="q-num">35</div>
+        <div class="q-text">BERT 的预训练任务包括哪些？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>只有 Next Sentence Prediction</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>只有语言建模（预测下一个词）</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Masked Language Model + Next Sentence Prediction</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>只使用对比学习</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(35)">提交答案</button>
+    <div class="answer-block" id="answer-35">
+        <div class="answer-label">✅ 正确答案：C</div>
+        <div class="answer-text">
+            <strong>MLM</strong>：随机 mask 15% 的 token，预测原词。<strong>NSP</strong>：判断句子 B 是否是句子 A 的下一句。RoBERTa 发现 NSP 作用不大，去掉了该任务。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="36" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">36</div>
+        <div class="q-text">GPT 系列使用的预训练任务是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>Masked Language Model</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>Causal Language Model（自回归语言建模）</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>Next Sentence Prediction</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>对比学习</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(36)">提交答案</button>
+    <div class="answer-block" id="answer-36">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <strong>Causal LM</strong>：给定前 t 个 token，预测第 t+1 个 token。自回归生成，适合文本生成任务。GPT-2/3/4 都是这种范式。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="37" data-type="single" data-answer="A">
+    <div class="q-header">
+        <div class="q-num">37</div>
+        <div class="q-text">T5 模型的核心设计特点是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>将所有 NLP 任务统一为 Text-to-Text 格式</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>只使用 Encoder-only 架构</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>只使用 Decoder-only 架构</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>不使用预训练</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(37)">提交答案</button>
+    <div class="answer-block" id="answer-37">
+        <div class="answer-label">✅ 正确答案：A</div>
+        <div class="answer-text">
+            <strong>T5</strong>：Text-to-Text Transfer Transformer。分类、翻译、摘要等所有任务都转化为"输入文本 → 输出文本"的统一格式，使用 Encoder-Decoder 架构。
+        </div>
+    </div>
+</div>
+
+<div class="question-card single" data-id="38" data-type="single" data-answer="B">
+    <div class="q-header">
+        <div class="q-num">38</div>
+        <div class="q-text">Switch Transformer 和 MoE（混合专家模型）的核心思想是？<span class="type-badge">单选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>减少模型总参数量</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>增加总参数量，但每个 token 只激活部分参数</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>将所有参数用于每个 token</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>只使用单个专家网络</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(38)">提交答案</button>
+    <div class="answer-block" id="answer-38">
+        <div class="answer-label">✅ 正确答案：B</div>
+        <div class="answer-text">
+            <strong>MoE</strong>：多个专家网络，路由器选择 TopK 专家处理每个 token。总参数大（如 1.6T），但激活参数少（如 200B），推理成本接近小模型。
+        </div>
+    </div>
+</div>
+
+<div class="question-card multi" data-id="39" data-type="multi" data-answer="A,B,C">
+    <div class="q-header">
+        <div class="q-num">39</div>
+        <div class="q-text">关于 Transformer 变体演进，下列说法正确的有？<span class="type-badge">多选</span></div>
+    </div>
+    <ul class="options">
+        <li class="option" data-value="A"><span class="option-marker">A</span>ViT 将 Transformer 应用于图像分类</li>
+        <li class="option" data-value="B"><span class="option-marker">B</span>CLIP 联合训练图像和文本编码器</li>
+        <li class="option" data-value="C"><span class="option-marker">C</span>LLaMA 是开源 decoder-only 大模型</li>
+        <li class="option" data-value="D"><span class="option-marker">D</span>所有 Transformer 变体都使用 Encoder-Decoder 架构</li>
+    </ul>
+    <button class="submit-btn" onclick="checkAnswer(39)">提交答案</button>
+    <div class="answer-block" id="answer-39">
+        <div class="answer-label">✅ 正确答案：A、B、C</div>
+        <div class="answer-text">
+            ViT：Vision Transformer，将图像分块作为序列输入；CLIP：对比学习联合训练图像文本；LLaMA：Meta 开源 decoder-only 模型。并非所有变体都用 Encoder-Decoder。
+        </div>
+    </div>
+</div>
+
+<div class="question-card short" data-id="40" data-type="short">
+    <div class="q-header">
+        <div class="q-num">40</div>
+        <div class="q-text">对比 BERT 和 GPT 的预训练范式差异，以及各自适合的任务类型。<span class="type-badge">简答</span></div>
+    </div>
+    <textarea class="short-answer-input" id="input-40" placeholder="请在此输入你的答案..."></textarea>
+    <button class="submit-btn" onclick="checkAnswer(40)">提交答案</button>
+    <div class="answer-block" id="answer-40">
+        <div class="answer-label">✅ 参考答案</div>
+        <div class="answer-text">
+            <strong>BERT</strong>：Encoder-only，双向注意力，MLM 预训练。适合理解任务（分类、NER、问答）。<br><br>
+            <strong>GPT</strong>：Decoder-only，单向注意力，Causal LM 预训练。适合生成任务（文本生成、对话、代码补全）。
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+</div><!-- end container -->
+
+<!-- 完成弹窗 -->
+<div class="modal-overlay" id="completion-modal">
+    <div class="modal-content">
+        <h2>🎉 答题完成！</h2>
+        <div class="score-display" id="final-score">0%</div>
+        <p>你已经完成了所有题目</p>
+        <button class="btn btn-primary" onclick="closeModal()">继续复习</button>
+    </div>
+</div>
+
+<script>
+// 题目数据
+const questions = {};
+let answeredCount = 0;
+let correctCount = 0;
+
+// 初始化 - 使用 DOMContentLoaded 确保 DOM 完全加载
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing...');
+    initQuestions();
+    updateStats();
+    bindOptionClicks();
+    bindNavClicks();
+});
+
+// 绑定选项点击事件
+function bindOptionClicks() {
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        const type = card.dataset.type;
+        
+        if (type === 'single' || type === 'multi') {
+            card.querySelectorAll('.option').forEach(opt => {
+                opt.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (this.classList.contains('disabled')) return;
+                    
+                    if (type === 'single') {
+                        // 单选：清除其他选中，只选当前
+                        card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                        this.classList.add('selected');
+                    } else {
+                        // 多选：切换选中状态
+                        this.classList.toggle('selected');
+                    }
+                    
+                    console.log('Option clicked:', this.dataset.value, 'for question', id);
+                });
+            });
+        }
+    });
+    console.log('Option clicks bound');
+}
+
+// 绑定导航点击
+function bindNavClicks() {
+    document.querySelectorAll('.nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.nav a').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+}
+
+function initQuestions() {
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        const type = card.dataset.type;
+        const answer = card.dataset.answer;
+        questions[id] = { type, answer, answered: false, correct: false };
+    });
+}
+
+function checkAnswer(id) {
+    const card = document.querySelector(`.question-card[data-id="${id}"]`);
+    const type = card.dataset.type;
+    const correctAnswer = card.dataset.answer;
+    
+    if (questions[id].answered) return;
+    
+    let userAnswer = '';
+    let isCorrect = false;
+    
+    if (type === 'single' || type === 'multi') {
+        const selected = card.querySelectorAll('.option.selected');
+        if (selected.length === 0) {
+            alert('请先选择答案！');
+            return;
+        }
+        userAnswer = Array.from(selected).map(o => o.dataset.value).join(',');
+        
+        if (type === 'single') {
+            isCorrect = userAnswer === correctAnswer;
+        } else {
+            const userSet = new Set(userAnswer.split(','));
+            const correctSet = new Set(correctAnswer.split(','));
+            isCorrect = userSet.size === correctSet.size && 
+                       [...userSet].every(x => correctSet.has(x));
+        }
+        
+        card.querySelectorAll('.option').forEach(opt => {
+            opt.classList.add('disabled');
+            const val = opt.dataset.value;
+            if (correctAnswer.includes(val)) {
+                opt.classList.add('correct-answer');
+            } else if (opt.classList.contains('selected')) {
+                opt.classList.add('wrong-answer');
+            }
+        });
+    } else if (type === 'short') {
+        const input = document.getElementById(`input-${id}`);
+        if (!input.value.trim()) {
+            alert('请先输入答案！');
+            return;
+        }
+        input.disabled = true;
+        isCorrect = true;
+    }
+    
+    document.getElementById(`answer-${id}`).classList.add('show');
+    
+    questions[id].answered = true;
+    questions[id].correct = isCorrect;
+    card.classList.add('answered');
+    card.classList.add(isCorrect ? 'correct' : 'wrong');
+    
+    const answerBlock = document.getElementById(`answer-${id}`);
+    const existingBadge = answerBlock.querySelector('.result-badge');
+    if (!existingBadge) {
+        const badge = document.createElement('div');
+        badge.className = `result-badge ${isCorrect ? 'result-correct' : 'result-wrong'}`;
+        badge.innerHTML = isCorrect ? '✅ 回答正确' : '❌ 回答错误';
+        answerBlock.insertBefore(badge, answerBlock.firstChild);
+    }
+    
+    card.querySelector('.submit-btn').disabled = true;
+    
+    updateStats();
+    
+    // 检查是否全部完成
+    const total = Object.keys(questions).length;
+    if (answeredCount === total) {
+        showCompletionModal();
+    }
+}
+
+function updateStats() {
+    const total = Object.keys(questions).length;
+    answeredCount = Object.values(questions).filter(q => q.answered).length;
+    correctCount = Object.values(questions).filter(q => q.correct).length;
+    
+    document.getElementById('total-num').textContent = total;
+    document.getElementById('answered-num').textContent = answeredCount;
+    document.getElementById('correct-num').textContent = correctCount;
+    
+    const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+    document.getElementById('score-num').textContent = percentage + '%';
+    
+    document.getElementById('progress-bar').style.width = (answeredCount / total * 100) + '%';
+}
+
+function checkAllAnswers() {
+    let hasUnanswered = false;
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        if (!questions[id].answered) {
+            hasUnanswered = true;
+            checkAnswer(id);
+        }
+    });
+    
+    if (!hasUnanswered) {
+        showCompletionModal();
+    }
+}
+
+function resetAll() {
+    if (!confirm('确定要重置所有答案吗？')) return;
+    location.reload();
+}
+
+function showAllAnswers() {
+    document.querySelectorAll('.question-card').forEach(card => {
+        const id = card.dataset.id;
+        document.getElementById(`answer-${id}`).classList.add('show');
+    });
+}
+
+function showCompletionModal() {
+    const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+    document.getElementById('final-score').textContent = percentage + '%';
+    document.getElementById('completion-modal').classList.add('show');
+}
+
+function closeModal() {
+    document.getElementById('completion-modal').classList.remove('show');
+}
+</script>
+
+</body>
+</html>

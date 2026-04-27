@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent 详解 - 面试冲刺版</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+        .hero {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #764ba2 100%);
+            padding: 50px 30px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 15px; }
+        .hero p { font-size: 1.1rem; opacity: 0.9; max-width: 650px; margin: 0 auto; }
+        .nav {
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav a {
+            color: #d4a8f0;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            border: 1px solid rgba(240,147,251,0.4);
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        .nav a:hover, .nav a.active {
+            background: #f093fb;
+            color: #1a1a2e;
+            border-color: #f093fb;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 35px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(240,147,251,0.3);
+        }
+        h2 .icon { font-size: 2rem; }
+        
+        h3 {
+            color: #f093fb;
+            font-size: 1.25rem;
+            margin: 30px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h3::before {
+            content: '';
+            width: 4px;
+            height: 22px;
+            background: linear-gradient(180deg, #f093fb, #764ba2);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(240,147,251,0.12), rgba(118,75,162,0.12));
+            border-left: 4px solid #f093fb;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .key-point {
+            background: rgba(67,233,123,0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #a8f5c5;
+            font-family: monospace;
+        }
+        
+        .code-block {
+            background: rgba(0,0,0,0.35);
+            border-radius: 10px;
+            padding: 18px 22px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.88rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            line-height: 1.7;
+        }
+        .code-block .comment { color: #6a9955; }
+        .code-block .keyword { color: #569cd6; }
+        .code-block .func { color: #dcdcaa; }
+        .code-block .string { color: #ce9178; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th {
+            background: rgba(240,147,251,0.15);
+            color: #d4a8f0;
+            font-weight: 600;
+        }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 25px 0;
+        }
+        .compare-item {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .compare-item h4 {
+            color: #f093fb;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .interview-tip {
+            background: linear-gradient(135deg, rgba(255,183,77,0.12), rgba(255,167,38,0.12));
+            border: 1px solid rgba(255,183,77,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .interview-tip h4 {
+            color: #ffb74d;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .qa-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .qa-q {
+            color: #ffb74d;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .qa-q::before {
+            content: 'Q';
+            background: rgba(255,183,77,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .qa-a {
+            color: #c0c0c0;
+            padding-left: 30px;
+        }
+        
+        .flow-diagram {
+            background: rgba(0,0,0,0.25);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 2;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .flow-diagram .arrow { color: #f093fb; }
+        .flow-diagram .box {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 6px;
+            margin: 3px;
+        }
+        .flow-diagram .box-input { background: rgba(102,126,234,0.3); }
+        .flow-diagram .box-process { background: rgba(240,147,251,0.3); }
+        .flow-diagram .box-output { background: rgba(67,233,123,0.3); }
+        .flow-diagram .box-decision { background: rgba(255,183,77,0.3); }
+        
+        .summary-box {
+            background: linear-gradient(135deg, rgba(240,147,251,0.15), rgba(118,75,162,0.15));
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        ul, ol { margin: 15px 0 15px 25px; }
+        li { margin: 8px 0; }
+        
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.8rem; }
+            .container { padding: 20px 15px; }
+            .card { padding: 25px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>🤖 AI Agent 详解</h1>
+    <p>核心概念 · 架构设计 · 主流框架 · 面试要点<br>从零到一，清晰掌握 Agent 全貌</p>
+</div>
+
+<div class="nav">
+    <a href="#what" class="active">❓ 什么是Agent</a>
+    <a href="#core">🧠 核心架构</a>
+    <a href="#pattern">🔄 设计模式</a>
+    <a href="#tool">🔧 工具调用</a>
+    <a href="#memory">💾 记忆系统</a>
+    <a href="#framework">🏗️ 主流框架</a>
+    <a href="#qa">🎯 面试Q&A</a>
+</div>
+
+<div class="container">
+
+<!-- ==================== 什么是 Agent ==================== -->
+<div id="what" class="card">
+    <h2><span class="icon">❓</span> 什么是 AI Agent</h2>
+
+    <h3>一句话定义</h3>
+    <div class="highlight-box">
+        <strong>AI Agent = 大模型 + 记忆 + 工具 + 规划</strong><br>
+        能够自主感知环境、制定计划、调用工具、执行任务，并根据反馈调整行为的智能体。
+    </div>
+
+    <h3>Agent 与普通 LLM 的本质区别</h3>
+    <table>
+        <tr>
+            <th>维度</th>
+            <th>普通 LLM</th>
+            <th>AI Agent</th>
+        </tr>
+        <tr>
+            <td><strong>交互方式</strong></td>
+            <td>一问一答，被动响应</td>
+            <td>多轮自主决策，主动执行</td>
+        </tr>
+        <tr>
+            <td><strong>工具使用</strong></td>
+            <td>❌ 无法调用外部工具</td>
+            <td>✅ 可调用搜索、代码、API等</td>
+        </tr>
+        <tr>
+            <td><strong>记忆能力</strong></td>
+            <td>仅限上下文窗口</td>
+            <td>短期+长期记忆，跨会话持久化</td>
+        </tr>
+        <tr>
+            <td><strong>规划能力</strong></td>
+            <td>无，直接生成回答</td>
+            <td>拆解任务、制定计划、逐步执行</td>
+        </tr>
+        <tr>
+            <td><strong>错误处理</strong></td>
+            <td>无法自我纠正</td>
+            <td>观察结果→反思→调整策略</td>
+        </tr>
+    </table>
+
+    <h3>形象比喻</h3>
+    <div class="highlight-box">
+        <strong>LLM</strong> = 一个博学但只会说话的人，你问什么他答什么<br>
+        <strong>Agent</strong> = 一个有手有脚的助手，不仅能回答问题，还能帮你查资料、写代码、发邮件、操作软件
+    </div>
+</div>
+
+<!-- ==================== 核心架构 ==================== -->
+<div id="core" class="card">
+    <h2><span class="icon">🧠</span> Agent 核心架构</h2>
+
+    <h3>四大核心组件</h3>
+    <div class="flow-diagram">
+        <span class="box box-input">👤 用户输入</span>
+        <span class="arrow">→</span>
+        <span class="box box-process">🧠 LLM（大脑）</span>
+        <span class="arrow">↔</span>
+        <span class="box box-decision">📋 规划（Planning）</span><br><br>
+        <span class="box box-process">🧠 LLM（大脑）</span>
+        <span class="arrow">↔</span>
+        <span class="box box-decision">💾 记忆（Memory）</span>
+        <span class="arrow">↔</span>
+        <span class="box box-decision">🔧 工具（Tools）</span><br><br>
+        <span class="box box-process">🧠 LLM（大脑）</span>
+        <span class="arrow">→</span>
+        <span class="box box-output">📤 执行动作 / 返回结果</span>
+    </div>
+
+    <h3>1️⃣ LLM（大脑）</h3>
+    <p>Agent 的核心推理引擎，负责理解意图、决策、生成回复。</p>
+    <ul>
+        <li><strong>作用：</strong>理解用户需求 → 选择工具 → 解析结果 → 决定下一步</li>
+        <li><strong>关键能力：</strong>指令遵循、推理、函数调用（Function Calling）</li>
+        <li><strong>常见选择：</strong>GPT-4、Claude、Qwen、DeepSeek 等</li>
+    </ul>
+
+    <h3>2️⃣ 规划（Planning）</h3>
+    <p>将复杂任务拆解为可执行的子步骤：</p>
+    <div class="code-block">
+<span class="comment"># 用户：帮我分析竞品并写一份报告</span>
+
+<span class="comment"># Agent 的规划过程：</span>
+<span class="keyword">Step 1</span>: 搜索竞品A的最新信息  <span class="comment">→ 调用搜索工具</span>
+<span class="keyword">Step 2</span>: 搜索竞品B的最新信息  <span class="comment">→ 调用搜索工具</span>
+<span class="keyword">Step 3</span>: 整理对比数据          <span class="comment">→ LLM 推理</span>
+<span class="keyword">Step 4</span>: 生成分析报告          <span class="comment">→ LLM 生成</span>
+<span class="keyword">Step 5</span>: 保存到文档            <span class="comment">→ 调用文档工具</span>
+    </div>
+
+    <h3>3️⃣ 记忆（Memory）</h3>
+    <div class="compare-grid">
+        <div class="compare-item">
+            <h4>📝 短期记忆</h4>
+            <p>当前对话的上下文历史，存在 LLM 的上下文窗口中</p>
+            <p style="color:#888; font-size:0.85rem;">例如：之前3轮对话的内容</p>
+        </div>
+        <div class="compare-item">
+            <h4>💾 长期记忆</h4>
+            <p>持久化存储的用户偏好、历史交互、知识库</p>
+            <p style="color:#888; font-size:0.85rem;">例如：用户喜欢中文回复、上次查询的结果</p>
+        </div>
+    </div>
+
+    <h3>4️⃣ 工具（Tools）</h3>
+    <p>Agent 与外部世界交互的接口：</p>
+    <table>
+        <tr>
+            <th>工具类型</th>
+            <th>示例</th>
+        </tr>
+        <tr>
+            <td>🔍 搜索</td>
+            <td>Google Search、Bing Search、Tavily</td>
+        </tr>
+        <tr>
+            <td>💻 代码执行</td>
+            <td>Python REPL、沙箱环境</td>
+        </tr>
+        <tr>
+            <td>📁 文件操作</td>
+            <td>读写文件、操作数据库</td>
+        </tr>
+        <tr>
+            <td>🌐 API 调用</td>
+            <td>天气API、股票API、邮件API</td>
+        </tr>
+        <tr>
+            <td>🤖 其他Agent</td>
+            <td>调用子Agent处理特定子任务</td>
+        </tr>
+    </table>
+
+    <div class="interview-tip">
+        <h4>🎯 面试常考点</h4>
+        <ul>
+            <li>Agent 和 LLM 的区别？<br>
+                <em>→ Agent = LLM + 记忆 + 工具 + 规划，能自主决策和执行，不只是被动回答</em></li>
+            <li>Agent 的四大核心组件？<br>
+                <em>→ LLM（大脑）、Planning（规划）、Memory（记忆）、Tools（工具）</em></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ==================== 设计模式 ==================== -->
+<div id="pattern" class="card">
+    <h2><span class="icon">🔄</span> Agent 设计模式</h2>
+
+    <h3>1️⃣ ReAct 模式（最经典）</h3>
+    <div class="highlight-box">
+        <strong>ReAct = Reasoning + Acting</strong><br>
+        交替进行「思考」和「行动」，每一步都先推理再执行，再根据结果继续推理。
+    </div>
+    <div class="flow-diagram">
+        <span class="box box-decision">💭 Thought（思考）</span>
+        <span class="arrow">→</span>
+        <span class="box box-process">⚡ Action（行动）</span>
+        <span class="arrow">→</span>
+        <span class="box box-output">👁️ Observation（观察）</span>
+        <span class="arrow">→</span>
+        <span class="box box-decision">💭 Thought</span>
+        <span class="arrow">→</span> ...循环
+    </div>
+    <div class="code-block">
+<span class="comment"># ReAct 示例：查询北京天气并建议穿搭</span>
+
+<span class="func">Thought 1</span>: 我需要先查北京今天的天气
+<span class="func">Action 1</span>: <span class="keyword">call</span> weather_api(city="北京")
+<span class="func">Observation 1</span>: 北京今天 8°C，多云，北风3级
+
+<span class="func">Thought 2</span>: 8°C比较冷，需要保暖穿搭建议
+<span class="func">Action 2</span>: 无需额外工具，直接根据天气给出建议
+
+<span class="func">Answer</span>: 北京今天8°C多云偏冷，建议穿厚外套+毛衣+长裤，记得带围巾防风。
+    </div>
+
+    <h3>2️⃣ Reflexion 模式（自我反思）</h3>
+    <p>在 ReAct 基础上增加<strong>自我评估和反思</strong>能力：</p>
+    <div class="flow-diagram">
+        <span class="box box-process">⚡ 执行任务</span>
+        <span class="arrow">→</span>
+        <span class="box box-decision">🔍 自我评估</span>
+        <span class="arrow">→</span>
+        <span class="box box-decision">💭 反思改进</span>
+        <span class="arrow">→</span>
+        <span class="box box-process">⚡ 重新执行</span>
+    </div>
+    <p><strong>核心：</strong>Agent 完成任务后，自我评估结果质量，如果不好就反思原因，重新尝试。</p>
+
+    <h3>3️⃣ Plan-and-Execute 模式</h3>
+    <p>先完整规划，再逐步执行：</p>
+    <div class="code-block">
+<span class="comment"># Plan 阶段：一次性生成完整计划</span>
+Plan:
+  1. 搜索竞品A信息
+  2. 搜索竞品B信息
+  3. 对比分析
+  4. 生成报告
+
+<span class="comment"># Execute 阶段：按计划逐步执行</span>
+Execute Step 1 → 结果1
+Execute Step 2 → 结果2
+Execute Step 3 → 结果3  <span class="comment"># 可能根据结果调整计划</span>
+Execute Step 4 → 最终报告
+    </div>
+    <p><strong>对比 ReAct：</strong>ReAct 每步都重新思考；Plan-and-Execute 先做全局规划，适合复杂多步任务。</p>
+
+    <h3>4️⃣ Multi-Agent 模式（多智能体协作）</h3>
+    <div class="compare-grid">
+        <div class="compare-item">
+            <h4>🔄 串行协作</h4>
+            <p>Agent A 完成 → 传给 Agent B → 传给 Agent C</p>
+            <p style="color:#888; font-size:0.85rem;">如：研究员→写手→审核员</p>
+        </div>
+        <div class="compare-item">
+            <h4>🤝 并行协作</h4>
+            <p>多个 Agent 同时处理不同子任务</p>
+            <p style="color:#888; font-size:0.85rem;">如：3个研究员分别搜索3个方向</p>
+        </div>
+        <div class="compare-item">
+            <h4>👑 主从协作</h4>
+            <p>一个主 Agent 分配任务给多个子 Agent</p>
+            <p style="color:#888; font-size:0.85rem;">如：经理分配给设计师、开发、测试</p>
+        </div>
+        <div class="compare-item">
+            <h4>🗣️ 辩论协作</h4>
+            <p>多个 Agent 各自独立推理，投票/协商决策</p>
+            <p style="color:#888; font-size:0.85rem;">如：3个Agent各自分析后投票</p>
+        </div>
+    </div>
+
+    <div class="interview-tip">
+        <h4>🎯 面试常考点</h4>
+        <ul>
+            <li>ReAct 的核心流程？<br>
+                <em>→ Thought → Action → Observation 循环，交替推理和行动</em></li>
+            <li>ReAct 和 Plan-and-Execute 的区别？<br>
+                <em>→ ReAct 每步重新思考；Plan-and-Execute 先全局规划再执行，适合复杂任务</em></li>
+            <li>Multi-Agent 有哪几种协作模式？<br>
+                <em>→ 串行、并行、主从、辩论</em></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ==================== 工具调用 ==================== -->
+<div id="tool" class="card">
+    <h2><span class="icon">🔧</span> 工具调用（Function Calling）</h2>
+
+    <h3>核心原理</h3>
+    <div class="highlight-box">
+        <strong>Function Calling</strong> = 让大模型输出结构化的「函数调用指令」，而不是纯文本回复。<br>
+        模型本身不执行函数，而是告诉你「该调用什么函数、传什么参数」，由你的代码去执行。
+    </div>
+
+    <h3>工作流程</h3>
+    <div class="flow-diagram">
+        <span class="box box-input">👤 用户提问</span>
+        <span class="arrow">→</span>
+        <span class="box box-process">🧠 LLM 判断：需要调用工具？</span><br><br>
+        <span class="box box-decision">✅ 是：生成函数调用JSON</span>
+        <span class="arrow">→</span>
+        <span class="box box-process">⚙️ 你的代码执行函数</span>
+        <span class="arrow">→</span>
+        <span class="box box-output">📤 结果返回LLM</span>
+        <span class="arrow">→</span>
+        <span class="box box-output">💬 最终回答</span><br><br>
+        <span class="box box-output">❌ 否：直接生成文本回答</span>
+    </div>
+
+    <h3>Function Calling 示例</h3>
+    <div class="code-block">
+<span class="comment">// 1. 定义工具（告诉模型有哪些工具可用）</span>
+tools = [{
+  <span class="string">"name"</span>: <span class="string">"get_weather"</span>,
+  <span class="string">"description"</span>: <span class="string">"查询指定城市的天气"</span>,
+  <span class="string">"parameters"</span>: {
+    <span class="string">"city"</span>: { <span class="string">"type"</span>: <span class="string">"string"</span>, <span class="string">"description"</span>: <span class="string">"城市名"</span> }
+  }
+}]
+
+<span class="comment">// 2. 模型返回：不是文本，而是函数调用指令</span>
+{
+  <span class="string">"tool_calls"</span>: [{
+    <span class="string">"function"</span>: {
+      <span class="string">"name"</span>: <span class="string">"get_weather"</span>,
+      <span class="string">"arguments"</span>: { <span class="string">"city"</span>: <span class="string">"北京"</span> }
+    }
+  }]
+}
+
+<span class="comment">// 3. 你的代码执行 get_weather("北京") → 返回结果给模型</span>
+<span class="comment">// 4. 模型根据结果生成最终回答</span>
+    </div>
+
+    <h3>关键细节</h3>
+    <ul>
+        <li><strong>模型不执行函数：</strong>它只输出「调用什么、传什么参」，执行由你的代码完成</li>
+        <li><strong>如何判断需要工具：</strong>模型根据工具的 description 自主判断</li>
+        <li><strong>多工具选择：</strong>可以一次定义多个工具，模型自主选择合适的</li>
+        <li><strong>并行调用：</strong>模型可以一次返回多个函数调用（如同时查天气和股票）</li>
+    </ul>
+
+    <div class="interview-tip">
+        <h4>🎯 面试常考点</h4>
+        <ul>
+            <li>Function Calling 的原理？<br>
+                <em>→ 模型输出结构化 JSON 指令，由外部代码执行，结果返回模型继续推理</em></li>
+            <li>模型本身会执行函数吗？<br>
+                <em>→ 不会！模型只决定「调用什么」，执行由开发者代码完成</em></li>
+            <li>如何让模型知道有哪些工具可用？<br>
+                <em>→ 通过 tools 参数传入工具的名称、描述、参数定义</em></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ==================== 记忆系统 ==================== -->
+<div id="memory" class="card">
+    <h2><span class="icon">💾</span> Agent 记忆系统</h2>
+
+    <h3>记忆层次</h3>
+    <table>
+        <tr>
+            <th>类型</th>
+            <th>存储位置</th>
+            <th>持久性</th>
+            <th>示例</th>
+        </tr>
+        <tr>
+            <td><strong>工作记忆</strong></td>
+            <td>LLM 上下文窗口</td>
+            <td>当前对话</td>
+            <td>最近几轮对话历史</td>
+        </tr>
+        <tr>
+            <td><strong>短期记忆</strong></td>
+            <td>会话缓存</td>
+            <td>一次会话</td>
+            <td>当前任务中间结果</td>
+        </tr>
+        <tr>
+            <td><strong>长期记忆</strong></td>
+            <td>向量数据库 / KV存储</td>
+            <td>跨会话持久</td>
+            <td>用户偏好、历史摘要</td>
+        </tr>
+    </table>
+
+    <h3>长期记忆的实现方案</h3>
+    <div class="compare-grid">
+        <div class="compare-item">
+            <h4>📋 摘要记忆</h4>
+            <p>定期对对话做摘要，压缩后存储。节省空间但可能丢失细节。</p>
+        </div>
+        <div class="compare-item">
+            <h4>🔍 向量检索记忆</h4>
+            <p>将历史交互向量化存入向量库，需要时检索相关片段。灵活但需要额外基础设施。</p>
+        </div>
+        <div class="compare-item">
+            <h4>🗂️ 知识图谱记忆</h4>
+            <p>抽取实体和关系构建图谱，支持复杂推理。结构化但构建成本高。</p>
+        </div>
+    </div>
+
+    <div class="interview-tip">
+        <h4>🎯 面试常考点</h4>
+        <ul>
+            <li>为什么 Agent 需要长期记忆？<br>
+                <em>→ LLM 上下文窗口有限（如128K），无法存储所有历史；跨会话需要持久化</em></li>
+            <li>如何实现长期记忆？<br>
+                <em>→ 向量数据库 + 摘要 + 知识图谱，根据场景选择</em></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ==================== 主流框架 ==================== -->
+<div id="framework" class="card">
+    <h2><span class="icon">🏗️</span> 主流 Agent 框架</h2>
+
+    <table>
+        <tr>
+            <th>框架</th>
+            <th>开发者</th>
+            <th>核心特点</th>
+            <th>适用场景</th>
+        </tr>
+        <tr>
+            <td><strong>LangChain</strong></td>
+            <td>LangChain AI</td>
+            <td>生态最丰富，组件多，链式调用</td>
+            <td>通用Agent开发</td>
+        </tr>
+        <tr>
+            <td><strong>LlamaIndex</strong></td>
+            <td>LlamaIndex</td>
+            <td>专注RAG，数据连接能力强</td>
+            <td>知识库问答Agent</td>
+        </tr>
+        <tr>
+            <td><strong>CrewAI</strong></td>
+            <td>CrewAI</td>
+            <td>多Agent角色协作，简单易用</td>
+            <td>多Agent协作任务</td>
+        </tr>
+        <tr>
+            <td><strong>AutoGen</strong></td>
+            <td>微软</td>
+            <td>多Agent对话式协作</td>
+            <td>代码生成、数据分析</td>
+        </tr>
+        <tr>
+            <td><strong>OpenAI Assistants API</strong></td>
+            <td>OpenAI</td>
+            <td>官方托管，内置工具和记忆</td>
+            <td>快速构建Agent</td>
+        </tr>
+    </table>
+
+    <h3>LangChain 核心概念</h3>
+    <div class="code-block">
+<span class="comment"># LangChain 构建 Agent 的核心组件</span>
+
+<span class="keyword">from</span> langchain.agents <span class="keyword">import</span> AgentExecutor, create_react_agent
+<span class="keyword">from</span> langchain.tools <span class="keyword">import</span> Tool
+<span class="keyword">from</span> langchain.memory <span class="keyword">import</span> ConversationBufferMemory
+
+<span class="comment"># 1. 定义工具</span>
+tools = [
+    Tool(name=<span class="string">"search"</span>, func=search_func, description=<span class="string">"搜索信息"</span>),
+    Tool(name=<span class="string">"calculator"</span>, func=calc_func, description=<span class="string">"数学计算"</span>),
+]
+
+<span class="comment"># 2. 配置记忆</span>
+memory = ConversationBufferMemory()
+
+<span class="comment"># 3. 创建 Agent（使用 ReAct 模式）</span>
+agent = create_react_agent(llm, tools, prompt_template)
+
+<span class="comment"># 4. 执行器（管理 Agent 运行循环）</span>
+agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory)
+    </div>
+
+    <div class="interview-tip">
+        <h4>🎯 面试常考点</h4>
+        <ul>
+            <li>LangChain 的核心组件？<br>
+                <em>→ Chain（链）、Agent（智能体）、Tool（工具）、Memory（记忆）、Retriever（检索器）</em></li>
+            <li>AgentExecutor 的作用？<br>
+                <em>→ 管理 Agent 的运行循环（思考→行动→观察→...），直到任务完成或达到步数限制</em></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ==================== 面试 Q&A ==================== -->
+<div id="qa" class="card">
+    <h2><span class="icon">🎯</span> 高频面试 Q&A</h2>
+
+    <div class="qa-item">
+        <div class="qa-q">什么是 AI Agent？它和 LLM 的区别是什么？</div>
+        <div class="qa-a">
+            <strong>定义：</strong>AI Agent 是能够自主感知环境、规划任务、调用工具、执行动作并根据反馈调整行为的智能体。<br><br>
+            <strong>与 LLM 的区别：</strong><br>
+            · LLM 只能被动回答问题，Agent 能主动执行任务<br>
+            · LLM 无法调用外部工具，Agent 可以使用搜索、代码、API等工具<br>
+            · LLM 没有持久记忆，Agent 有短期+长期记忆系统<br>
+            · LLM 无法自主规划，Agent 能拆解复杂任务并逐步执行<br><br>
+            <strong>公式化：</strong>Agent = LLM + Memory + Tools + Planning
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="qa-q">ReAct 模式的核心思想是什么？有什么优缺点？</div>
+        <div class="qa-a">
+            <strong>核心思想：</strong>Reasoning + Acting 交替进行。每一步先思考（Thought），再执行动作（Action），观察结果（Observation），然后继续思考。<br><br>
+            <strong>优点：</strong><br>
+            · 每步都有推理过程，决策可解释<br>
+            · 可以根据中间结果灵活调整策略<br>
+            · 减少幻觉（基于实际观察而非猜测）<br><br>
+            <strong>缺点：</strong><br>
+            · 每步都调用 LLM，Token 消耗大<br>
+            · 可能陷入循环（反复尝试同一错误策略）<br>
+            · 对简单任务过于复杂，效率低
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="qa-q">Function Calling 是怎么实现的？模型本身会执行函数吗？</div>
+        <div class="qa-a">
+            <strong>实现原理：</strong><br>
+            1. 开发者定义工具的名称、描述、参数格式，传给模型<br>
+            2. 用户提问后，模型判断是否需要调用工具<br>
+            3. 如果需要，模型输出结构化 JSON（函数名+参数）<br>
+            4. 开发者代码解析 JSON，执行对应函数<br>
+            5. 将执行结果返回模型，模型生成最终回答<br><br>
+            <strong>关键：模型本身不执行函数！</strong>它只是「决定调用什么」，执行由外部代码完成。这是很多面试官会追问的点。
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="qa-q">Agent 的记忆系统如何设计？如何解决上下文窗口有限的问题？</div>
+        <div class="qa-a">
+            <strong>三层记忆架构：</strong><br>
+            1. <strong>工作记忆：</strong>当前对话历史，直接放在 LLM 的 Prompt 中<br>
+            2. <strong>短期记忆：</strong>当前任务的中间结果，缓存到内存中<br>
+            3. <strong>长期记忆：</strong>跨会话的持久化存储，用向量数据库检索<br><br>
+            <strong>解决上下文有限的方法：</strong><br>
+            · <strong>摘要压缩：</strong>对长对话做摘要，用摘要替代原始内容<br>
+            · <strong>滑动窗口：</strong>只保留最近 K 轮对话<br>
+            · <strong>RAG 检索：</strong>将历史存入向量库，需要时检索相关片段<br>
+            · <strong>重要度筛选：</strong>只保留重要信息，丢弃冗余内容
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="qa-q">Multi-Agent 系统有哪些协作模式？各适合什么场景？</div>
+        <div class="qa-a">
+            <strong>四种模式：</strong><br><br>
+            1. <strong>串行（Pipeline）：</strong>A→B→C 依次处理<br>
+            → 适合有明确流程的任务（研究→写作→审核）<br><br>
+            2. <strong>并行（Parallel）：</strong>多个 Agent 同时处理不同子任务<br>
+            → 适合可分解的独立子任务（同时搜索多个方向）<br><br>
+            3. <strong>主从（Hierarchical）：</strong>一个主 Agent 分配任务给子 Agent<br>
+            → 适合复杂项目（项目经理分配给开发、设计、测试）<br><br>
+            4. <strong>辩论（Debate）：</strong>多个 Agent 各自推理，投票决策<br>
+            → 适合需要多角度验证的任务（代码审查、方案评审）
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="qa-q">Agent 在实际落地中面临哪些挑战？</div>
+        <div class="qa-a">
+            <strong>五大核心挑战：</strong><br><br>
+            1. <strong>可靠性：</strong>LLM 可能选错工具、生成错误参数，导致执行失败<br>
+            → 解法：增加校验层、人工确认关键操作<br><br>
+            2. <strong>成本控制：</strong>每步都调用 LLM，Token 消耗大<br>
+            → 解法：缓存常见模式、小模型做简单决策<br><br>
+            3. <strong>安全性：</strong>Agent 有执行权限，可能误操作（删文件、发邮件）<br>
+            → 解法：权限控制、沙箱环境、人工审批<br><br>
+            4. <strong>调试困难：</strong>多步执行+工具调用，出错难定位<br>
+            → 解法：详细日志、链路追踪<br><br>
+            5. <strong>评估困难：</strong>Agent 行为非确定性，难以量化评估<br>
+            → 解法：任务完成率、步骤准确性、人工评测
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 总结 ==================== -->
+<div class="summary-box">
+    <h3>🎯 Agent 面试核心速记</h3>
+    <p style="margin-top: 20px; line-height: 2.2; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <strong>定义：</strong>Agent = LLM + Memory + Tools + Planning<br>
+        <strong>核心模式：</strong>ReAct（思考→行动→观察循环）<br>
+        <strong>工具调用：</strong>模型输出 JSON 指令，外部代码执行<br>
+        <strong>记忆系统：</strong>工作记忆 + 短期记忆 + 长期记忆<br>
+        <strong>多Agent：</strong>串行 / 并行 / 主从 / 辩论<br>
+        <strong>主要挑战：</strong>可靠性、成本、安全、调试、评估
+    </p>
+    <p style="margin-top: 25px; color: #d4a8f0;">
+        祝你面试顺利！🚀
+    </p>
+</div>
+
+</div><!-- end container -->
+
+<script>
+document.querySelectorAll('.nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.nav a').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+window.addEventListener('scroll', () => {
+    const sections = ['what','core','pattern','tool','memory','framework','qa'];
+    const scrollPos = window.scrollY + 100;
+    sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+            const top = section.offsetTop;
+            const bottom = top + section.offsetHeight;
+            if (scrollPos >= top && scrollPos < bottom) {
+                document.querySelectorAll('.nav a').forEach(l => l.classList.remove('active'));
+                document.querySelector(`.nav a[href="#${id}"]`)?.classList.add('active');
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>
