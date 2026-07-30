@@ -1457,22 +1457,29 @@
                 const scrollTop = window.scrollY;
                 const windowHeight = window.innerHeight;
                 const docHeight = document.documentElement.scrollHeight - windowHeight;
+
+                // 1. 计算滚动百分比
                 let pct = 0;
                 if (docHeight > 0) {
                     pct = Math.min(100, (scrollTop / docHeight) * 100);
                 }
-                progressFill.style.width = pct + '%';
-                progressPct.textContent = Math.round(pct) + '%';
-                navProgressFill.style.width = pct + '%';
-                navProgressLabel.textContent = Math.round(pct) + '%';
 
+                // 2. 【核心修复】只更新导航栏里的进度条（你保留了这两个 ID）
+                const navFill = document.getElementById('navProgressFill');
+                const navLabel = document.getElementById('navProgressLabel');
+                if (navFill) navFill.style.width = pct + '%';
+                if (navLabel) navLabel.textContent = Math.round(pct) + '%';
+
+                // 3. 高亮当前导航项（这个逻辑没坏，保留不变）
                 let activeIndex = 0;
+                const sections = document.querySelectorAll('.module');
                 sections.forEach((sec, idx) => {
                     const rect = sec.getBoundingClientRect();
                     if (rect.top <= 120) {
                         activeIndex = idx;
                     }
                 });
+                const navLinks = document.querySelectorAll('.navbar-links a');
                 navLinks.forEach((link, idx) => {
                     link.classList.toggle('active', idx === activeIndex);
                 });
