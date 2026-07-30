@@ -5,39 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transformer 深度学习 · 面试备战</title>
     <style>
-        /* ===== 全局重置 ===== */
+        /* ===== 全局重置 & 亮色主题 ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         :root {
-            --bg-primary: #0b0e17;
-            --bg-card: #111827;
-            --bg-card-hover: #1a2332;
-            --text-primary: #e8edf5;
-            --text-secondary: #94a3b8;
+            --bg-body: #f0f4f9;          /* 页面整体浅灰蓝 */
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8faff;
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
             --text-muted: #64748b;
-            --accent-cyan: #38bdf8;
-            --accent-purple: #a78bfa;
-            --accent-pink: #f472b6;
-            --accent-green: #34d399;
-            --shadow-card: 0 8px 32px rgba(0,0,0,0.6);
+            --accent-blue: #2563eb;
+            --accent-purple: #7c3aed;
+            --accent-pink: #db2777;
+            --accent-green: #059669;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.06);
             --radius: 16px;
             --transition: 0.3s ease;
+            --nav-bg: #ffffff;
+            --border-light: #e2e8f0;
         }
         html {
             scroll-behavior: smooth;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-body);
             color: var(--text-primary);
             line-height: 1.7;
-            padding-top: 72px;
+            padding-top: 0; /* 标题在上，不需要额外留空 */
         }
         a {
-            color: var(--accent-cyan);
+            color: var(--accent-blue);
             text-decoration: none;
         }
         a:hover {
@@ -48,21 +50,64 @@
             color: #fff;
         }
 
-        /* ===== 导航栏 ===== */
+        /* ===== 标题区 (Hero) ===== */
+        .hero {
+            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+            padding: 60px 20px 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .hero .sub {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--accent-blue);
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #0b2d4b;
+            margin-bottom: 12px;
+        }
+        .hero .desc {
+            max-width: 720px;
+            margin: 0 auto;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        .hero .tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .hero .tags span {
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        /* ===== 导航栏 (sticky) ===== */
         .navbar {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
             z-index: 1000;
-            background: #0f172a;
-            border-bottom: 1px solid rgba(56,189,248,0.15);
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-light);
             padding: 0 24px;
             height: 72px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         .navbar-brand {
             display: flex;
@@ -70,7 +115,7 @@
             gap: 12px;
             font-weight: 700;
             font-size: 1.2rem;
-            color: var(--accent-cyan);
+            color: var(--accent-blue);
             white-space: nowrap;
         }
         .navbar-brand svg {
@@ -78,7 +123,7 @@
             width: 28px;
             height: 28px;
             fill: none;
-            stroke: var(--accent-cyan);
+            stroke: var(--accent-blue);
             stroke-width: 2;
         }
         .navbar-links {
@@ -112,13 +157,13 @@
         }
         .navbar-links a:hover,
         .navbar-links a.active {
-            color: #fff;
-            background: rgba(56,189,248,0.15);
-            border-color: rgba(56,189,248,0.25);
+            color: var(--accent-blue);
+            background: rgba(37, 99, 235, 0.08);
+            border-color: rgba(37, 99, 235, 0.15);
         }
         .navbar-links a.active {
-            color: var(--accent-cyan);
-            border-color: var(--accent-cyan);
+            font-weight: 600;
+            border-color: var(--accent-blue);
         }
         .nav-progress-wrap {
             display: flex;
@@ -129,14 +174,14 @@
         .nav-progress-bar {
             width: 80px;
             height: 4px;
-            background: rgba(255,255,255,0.08);
+            background: #e2e8f0;
             border-radius: 4px;
             overflow: hidden;
         }
         .nav-progress-bar .fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
             border-radius: 4px;
             transition: width 0.5s ease;
         }
@@ -175,66 +220,7 @@
             transform: rotate(-45deg) translate(4px,-4px);
         }
 
-        /* ===== Hero 标题区域 ===== */
-        .hero {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            padding: 60px 20px 40px;
-            margin-top: 0;
-            border-bottom: 1px solid rgba(56,189,248,0.08);
-            text-align: center;
-        }
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 30%, var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-        }
-        .hero .sub {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        .hero .desc {
-            max-width: 720px;
-            margin: 0 auto;
-            color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.8;
-        }
-        .hero .tags {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .hero .tags span {
-            background: rgba(56,189,248,0.08);
-            border: 1px solid rgba(56,189,248,0.12);
-            padding: 4px 18px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
-        }
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero .sub {
-                font-size: 1rem;
-            }
-            .hero {
-                padding: 40px 16px 30px;
-            }
-        }
-
-        /* ===== 容器 ===== */
+        /* ===== 主容器 ===== */
         .container {
             max-width: 1140px;
             margin: 0 auto;
@@ -244,7 +230,7 @@
         /* ===== 模块 ===== */
         .module {
             margin-top: 48px;
-            scroll-margin-top: 88px;
+            scroll-margin-top: 88px; /* 避开固定导航 */
         }
         .module:first-of-type {
             margin-top: 24px;
@@ -255,7 +241,7 @@
             gap: 16px;
             margin-bottom: 24px;
             padding-bottom: 12px;
-            border-bottom: 2px solid rgba(56,189,248,0.08);
+            border-bottom: 2px solid var(--border-light);
         }
         .module-number {
             display: flex;
@@ -264,21 +250,21 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: rgba(56,189,248,0.12);
-            border: 1px solid rgba(56,189,248,0.2);
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.2);
             font-weight: 700;
             font-size: 0.9rem;
-            color: var(--accent-cyan);
+            color: var(--accent-blue);
             flex-shrink: 0;
         }
         .module-title {
             font-size: 1.6rem;
             font-weight: 700;
             letter-spacing: -0.3px;
-            color: #fff;
+            color: var(--text-primary);
         }
         .module-desc {
-            color: var(--text-secondary);
+            color: var(--text-muted);
             margin-top: 4px;
             font-size: 0.95rem;
         }
@@ -289,12 +275,12 @@
             border-radius: var(--radius);
             padding: 24px 28px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid var(--border-light);
             box-shadow: var(--shadow-card);
             transition: var(--transition);
         }
         .card:hover {
-            border-color: rgba(56,189,248,0.10);
+            border-color: #b8d0f0;
             background: var(--bg-card-hover);
         }
         .card-title {
@@ -304,16 +290,16 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #fff;
+            color: var(--text-primary);
         }
         .card-title .badge {
             font-size: 0.65rem;
             font-weight: 500;
             padding: 2px 10px;
             border-radius: 40px;
-            background: rgba(56,189,248,0.12);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(56,189,248,0.15);
+            background: rgba(37, 99, 235, 0.08);
+            color: var(--accent-blue);
+            border: 1px solid rgba(37, 99, 235, 0.15);
             white-space: nowrap;
         }
         .card p, .card li {
@@ -327,11 +313,11 @@
             margin-bottom: 6px;
         }
         .card code {
-            background: rgba(255,255,255,0.05);
+            background: #f1f5f9;
             padding: 2px 10px;
             border-radius: 6px;
             font-size: 0.85rem;
-            color: var(--accent-cyan);
+            color: var(--accent-purple);
             font-family: 'Courier New', monospace;
         }
         .highlight {
@@ -339,7 +325,7 @@
             font-weight: 500;
         }
         .highlight-cyan {
-            color: var(--accent-cyan);
+            color: var(--accent-blue);
             font-weight: 500;
         }
         .highlight-purple {
@@ -361,7 +347,7 @@
             overflow-x: auto;
             margin: 12px 0 4px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid var(--border-light);
         }
         table {
             width: 100%;
@@ -369,16 +355,16 @@
             font-size: 0.9rem;
         }
         th {
-            background: rgba(56,189,248,0.06);
-            color: var(--accent-cyan);
+            background: #f1f5f9;
+            color: var(--text-primary);
             font-weight: 600;
             padding: 10px 14px;
             text-align: left;
-            border-bottom: 1px solid rgba(56,189,248,0.08);
+            border-bottom: 1px solid var(--border-light);
         }
         td {
             padding: 10px 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            border-bottom: 1px solid var(--border-light);
             color: var(--text-secondary);
         }
         tr:last-child td {
@@ -387,20 +373,21 @@
 
         /* ===== 面试题 ===== */
         .interview-item {
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--border-light);
             border-radius: 12px;
             padding: 16px 20px;
             margin-bottom: 14px;
-            background: rgba(255,255,255,0.02);
+            background: #fafcff;
             transition: var(--transition);
         }
         .interview-item:hover {
-            border-color: rgba(56,189,248,0.12);
+            border-color: #b8d0f0;
+            background: #f0f7ff;
         }
         .interview-q {
             font-weight: 600;
             font-size: 1rem;
-            color: #fff;
+            color: var(--text-primary);
             display: flex;
             align-items: flex-start;
             gap: 10px;
@@ -408,7 +395,7 @@
             user-select: none;
         }
         .interview-q .q-icon {
-            color: var(--accent-cyan);
+            color: var(--accent-blue);
             font-weight: 700;
             flex-shrink: 0;
             margin-top: 1px;
@@ -416,9 +403,9 @@
         .interview-q .toggle-btn {
             margin-left: auto;
             flex-shrink: 0;
-            background: rgba(56,189,248,0.08);
-            border: 1px solid rgba(56,189,248,0.12);
-            color: var(--accent-cyan);
+            background: rgba(37, 99, 235, 0.06);
+            border: 1px solid rgba(37, 99, 235, 0.12);
+            color: var(--accent-blue);
             padding: 2px 14px;
             border-radius: 40px;
             font-size: 0.7rem;
@@ -427,12 +414,12 @@
             transition: var(--transition);
         }
         .interview-q .toggle-btn:hover {
-            background: rgba(56,189,248,0.18);
+            background: rgba(37, 99, 235, 0.12);
         }
         .interview-a {
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid var(--border-light);
             color: var(--text-secondary);
             display: none;
             font-size: 0.95rem;
@@ -445,7 +432,7 @@
             color: var(--accent-pink);
         }
         .interview-a .key-point {
-            color: var(--accent-cyan);
+            color: var(--accent-blue);
             font-weight: 500;
         }
 
@@ -453,8 +440,8 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: #f1f5f9;
+            border: 1px solid var(--border-light);
             color: var(--text-secondary);
             padding: 4px 14px;
             border-radius: 40px;
@@ -465,9 +452,9 @@
             margin-top: 8px;
         }
         .copy-btn:hover {
-            background: rgba(56,189,248,0.08);
-            color: var(--accent-cyan);
-            border-color: rgba(56,189,248,0.15);
+            background: #e2e8f0;
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
         }
         .copy-btn.copied {
             color: var(--accent-green);
@@ -480,13 +467,13 @@
             right: 20px;
             z-index: 999;
             background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid var(--border-light);
             border-radius: 40px;
             padding: 8px 18px 8px 20px;
             display: flex;
             align-items: center;
             gap: 14px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
         .progress-footer .label {
             font-size: 0.7rem;
@@ -496,21 +483,21 @@
         .progress-footer .bar {
             width: 100px;
             height: 4px;
-            background: rgba(255,255,255,0.06);
+            background: #e2e8f0;
             border-radius: 4px;
             overflow: hidden;
         }
         .progress-footer .bar .fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
             border-radius: 4px;
             transition: width 0.6s ease;
         }
         .progress-footer .pct {
             font-size: 0.8rem;
             font-weight: 600;
-            color: var(--accent-cyan);
+            color: var(--accent-blue);
             min-width: 40px;
             text-align: right;
         }
@@ -521,36 +508,34 @@
             font-weight: 500;
             padding: 2px 12px;
             border-radius: 40px;
-            background: rgba(167,139,250,0.10);
+            background: rgba(124, 58, 237, 0.06);
             color: var(--accent-purple);
-            border: 1px solid rgba(167,139,250,0.12);
+            border: 1px solid rgba(124, 58, 237, 0.12);
             margin-right: 4px;
         }
         .tag-cyan {
-            background: rgba(56,189,248,0.08);
-            color: var(--accent-cyan);
-            border-color: rgba(56,189,248,0.12);
+            background: rgba(37, 99, 235, 0.06);
+            color: var(--accent-blue);
+            border-color: rgba(37, 99, 235, 0.12);
         }
         .tag-pink {
-            background: rgba(244,114,182,0.08);
+            background: rgba(219, 39, 119, 0.06);
             color: var(--accent-pink);
-            border-color: rgba(244,114,182,0.12);
+            border-color: rgba(219, 39, 119, 0.12);
         }
         .tag-green {
-            background: rgba(52,211,153,0.08);
+            background: rgba(5, 150, 105, 0.06);
             color: var(--accent-green);
-            border-color: rgba(52,211,153,0.12);
+            border-color: rgba(5, 150, 105, 0.12);
         }
 
+        /* ===== 响应式 ===== */
         @media (max-width: 992px) {
             .grid-2, .grid-3 {
                 grid-template-columns: 1fr;
             }
         }
         @media (max-width: 768px) {
-            body {
-                padding-top: 64px;
-            }
             .navbar {
                 padding: 0 12px;
                 height: 64px;
@@ -585,16 +570,25 @@
                 top: 64px;
                 left: 0;
                 right: 0;
-                background: var(--bg-primary);
+                background: #fff;
                 flex-wrap: wrap;
                 padding: 12px 16px;
                 gap: 4px;
-                border-bottom: 1px solid rgba(56,189,248,0.08);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+                border-bottom: 1px solid var(--border-light);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
             }
             .navbar-links.mobile-open a {
                 font-size: 0.75rem;
                 padding: 6px 12px;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero .sub {
+                font-size: 1rem;
+            }
+            .hero {
+                padding: 40px 16px 30px;
             }
             .module-title {
                 font-size: 1.3rem;
@@ -630,9 +624,6 @@
             .module {
                 margin-top: 32px;
             }
-            .hero h1 {
-                font-size: 2rem;
-            }
         }
         @media (max-width: 480px) {
             .navbar-links a {
@@ -652,43 +643,35 @@
             }
         }
 
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .mb-8 {
-            margin-bottom: 8px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .items-center {
-            align-items: center;
-        }
-        .text-sm {
-            font-size: 0.85rem;
-        }
-        .text-muted {
-            color: var(--text-muted);
-        }
-        .text-center {
-            text-align: center;
-        }
+        .mt-8 { margin-top: 8px; }
+        .mt-16 { margin-top: 16px; }
+        .mb-8 { margin-bottom: 8px; }
+        .flex { display: flex; }
+        .flex-wrap { flex-wrap: wrap; }
+        .gap-8 { gap: 8px; }
+        .gap-12 { gap: 12px; }
+        .items-center { align-items: center; }
+        .text-sm { font-size: 0.85rem; }
+        .text-muted { color: var(--text-muted); }
+        .text-center { text-align: center; }
     </style>
 </head>
 <body>
-    <!-- ===== 导航栏 ===== -->
+
+    <!-- ===== 标题区 (Hero) – 最前面 ===== -->
+    <header class="hero">
+        <div class="sub">Transformer 深度学习</div>
+        <h1>核心概念 · 架构设计 · 面试要点</h1>
+        <p class="desc">从零到一，清晰掌握 Transformer 全貌 —— 自注意力、多头机制、位置编码、训练技巧、主流变体，以及高频面试题深度剖析。</p>
+        <div class="tags">
+            <span>🔥 自注意力</span>
+            <span>🧠 多头机制</span>
+            <span>⚡ 并行计算</span>
+            <span>🎯 面试必备</span>
+        </div>
+    </header>
+
+    <!-- ===== 导航栏 (sticky, 放在标题下方) ===== -->
     <nav class="navbar" id="navbar" role="navigation">
         <div class="navbar-brand">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -719,19 +702,6 @@
             <span></span><span></span><span></span>
         </button>
     </nav>
-
-    <!-- ===== Hero 标题区 ===== -->
-    <header class="hero">
-        <div class="sub">Transformer 深度学习</div>
-        <h1>核心概念 · 架构设计 · 面试要点</h1>
-        <p class="desc">从零到一，清晰掌握 Transformer 全貌 —— 自注意力、多头机制、位置编码、训练技巧、主流变体，以及高频面试题深度剖析。</p>
-        <div class="tags">
-            <span>🔥 自注意力</span>
-            <span>🧠 多头机制</span>
-            <span>⚡ 并行计算</span>
-            <span>🎯 面试必备</span>
-        </div>
-    </header>
 
     <!-- ===== 主容器 ===== -->
     <div class="container">
@@ -1389,10 +1359,10 @@
                 <button class="copy-btn" data-copy="module-interview">📋 复制面试考点</button>
             </div>
 
-            <div class="card mt-16" style="border-color: rgba(56, 189, 248, 0.10);">
+            <div class="card mt-16" style="border-color: var(--border-light);">
                 <div class="flex flex-wrap gap-8 items-center" style="justify-content: space-between;">
                     <span style="color: var(--text-secondary); font-size: 0.9rem;">💡 点击题目可切换答案显示，方便自测</span>
-                    <button id="toggleAllAnswers" class="copy-btn" style="border-color: var(--accent-cyan); color: var(--accent-cyan);">🔁 全部展开 / 收起</button>
+                    <button id="toggleAllAnswers" class="copy-btn" style="border-color: var(--accent-blue); color: var(--accent-blue);">🔁 全部展开 / 收起</button>
                 </div>
             </div>
         </section>
@@ -1413,7 +1383,7 @@
         (function() {
             'use strict';
 
-            // ---------- DOM refs ----------
+            // DOM refs
             const navLinks = document.querySelectorAll('.navbar-links a');
             const sections = document.querySelectorAll('.module');
             const progressFill = document.getElementById('progressFill');
@@ -1423,7 +1393,7 @@
             const menuToggle = document.getElementById('menuToggle');
             const navLinksContainer = document.getElementById('navLinks');
 
-            // ---------- 移动端菜单 ----------
+            // 移动端菜单
             menuToggle.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const isOpen = navLinksContainer.classList.contains('mobile-open');
@@ -1453,7 +1423,7 @@
                 }
             });
 
-            // ---------- 进度更新 ----------
+            // 进度更新
             function updateProgress() {
                 const scrollTop = window.scrollY;
                 const windowHeight = window.innerHeight;
@@ -1483,7 +1453,7 @@
             window.addEventListener('resize', updateProgress);
             setTimeout(updateProgress, 100);
 
-            // ---------- 面试题切换 ----------
+            // 面试题切换
             window.toggleAnswer = function(el) {
                 const item = el.closest('.interview-item');
                 if (!item) return;
@@ -1523,7 +1493,7 @@
                 });
             }
 
-            // ---------- 复制功能 ----------
+            // 复制功能
             document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     const key = this.getAttribute('data-copy');
@@ -1617,7 +1587,7 @@
                 return result;
             }
 
-            // ---------- 平滑滚动 ----------
+            // 平滑滚动
             document.querySelectorAll('.navbar-links a, .module-header a').forEach(link => {
                 link.addEventListener('click', function(e) {
                     const href = this.getAttribute('href');
@@ -1636,6 +1606,7 @@
                 navLinksContainer.classList.add('mobile-hidden');
             }
             setTimeout(updateProgress, 200);
+
         })();
     </script>
 </body>
