@@ -3,79 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transformer 深度学习 · 面试备战</title>
+    <title>Transformer 深度学习 · 面试冲刺版</title>
     <style>
-        /* ===== 全局重置 & 亮色主题 ===== */
+        /* ===== 全局重置 & 配色（参考 AI Agent 示例） ===== */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --bg-body: #f0f4f9;          /* 页面整体浅灰蓝 */
-            --bg-card: #ffffff;
-            --bg-card-hover: #f8faff;
-            --text-primary: #1e293b;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --accent-blue: #2563eb;
-            --accent-purple: #7c3aed;
-            --accent-pink: #db2777;
-            --accent-green: #059669;
-            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.06);
-            --radius: 16px;
-            --transition: 0.3s ease;
-            --nav-bg: #ffffff;
-            --border-light: #e2e8f0;
-        }
-        html {
-            scroll-behavior: smooth;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-body);
-            color: var(--text-primary);
-            line-height: 1.7;
-            padding-top: 0; /* 标题在上，不需要额外留空 */
+            font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            line-height: 1.8;
+            padding-top: 0;
         }
         a {
-            color: var(--accent-blue);
+            color: #d4a8f0;
             text-decoration: none;
         }
         a:hover {
-            color: var(--accent-purple);
+            color: #f093fb;
         }
         ::selection {
-            background: var(--accent-purple);
-            color: #fff;
+            background: #f093fb;
+            color: #1a1a2e;
         }
 
-        /* ===== 标题区 (Hero) ===== */
+        /* ===== Hero 标题区 ===== */
         .hero {
-            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
-            padding: 60px 20px 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #764ba2 100%);
+            padding: 50px 30px 40px;
             text-align: center;
-            border-bottom: 1px solid var(--border-light);
         }
         .hero .sub {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--accent-blue);
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.85;
             letter-spacing: 2px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .hero h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #0b2d4b;
             margin-bottom: 12px;
+            letter-spacing: -0.5px;
         }
         .hero .desc {
+            font-size: 1.05rem;
+            opacity: 0.9;
             max-width: 720px;
             margin: 0 auto;
-            color: var(--text-secondary);
-            font-size: 1.05rem;
             line-height: 1.8;
         }
         .hero .tags {
@@ -83,88 +62,81 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 18px;
         }
         .hero .tags span {
-            background: rgba(37, 99, 235, 0.08);
-            border: 1px solid rgba(37, 99, 235, 0.15);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 4px 18px;
             border-radius: 40px;
-            font-size: 0.85rem;
-            color: var(--accent-blue);
+            font-size: 0.8rem;
             font-weight: 500;
         }
 
-        /* ===== 导航栏 (sticky) ===== */
+        /* ===== 导航栏 ===== */
         .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: var(--nav-bg);
-            border-bottom: 1px solid var(--border-light);
-            padding: 0 24px;
-            height: 72px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            flex-wrap: wrap;
+            gap: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         .navbar-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--accent-blue);
+            font-size: 1.1rem;
+            color: #d4a8f0;
             white-space: nowrap;
         }
         .navbar-brand svg {
             flex-shrink: 0;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             fill: none;
-            stroke: var(--accent-blue);
+            stroke: #f093fb;
             stroke-width: 2;
         }
         .navbar-links {
             display: flex;
             gap: 6px;
             list-style: none;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            padding: 4px 0;
-        }
-        .navbar-links::-webkit-scrollbar {
-            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .navbar-links li {
             flex-shrink: 0;
         }
         .navbar-links a {
-            display: inline-block;
-            padding: 6px 14px;
+            color: #d4a8f0;
+            text-decoration: none;
+            padding: 6px 16px;
+            border-radius: 25px;
+            border: 1px solid rgba(240, 147, 251, 0.3);
+            transition: all 0.3s;
             font-size: 0.8rem;
             font-weight: 500;
-            color: var(--text-secondary);
-            border-radius: 40px;
-            transition: var(--transition);
-            letter-spacing: 0.2px;
             white-space: nowrap;
-            background: transparent;
-            border: 1px solid transparent;
         }
         .navbar-links a:hover,
         .navbar-links a.active {
-            color: var(--accent-blue);
-            background: rgba(37, 99, 235, 0.08);
-            border-color: rgba(37, 99, 235, 0.15);
+            background: #f093fb;
+            color: #1a1a2e;
+            border-color: #f093fb;
         }
         .navbar-links a.active {
             font-weight: 600;
-            border-color: var(--accent-blue);
         }
+
         .nav-progress-wrap {
             display: flex;
             align-items: center;
@@ -174,24 +146,25 @@
         .nav-progress-bar {
             width: 80px;
             height: 4px;
-            background: #e2e8f0;
+            background: rgba(255, 255, 255, 0.12);
             border-radius: 4px;
             overflow: hidden;
         }
         .nav-progress-bar .fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            background: linear-gradient(90deg, #f093fb, #764ba2);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
         .nav-progress-label {
             font-size: 0.7rem;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.5);
             font-weight: 500;
             min-width: 36px;
             text-align: right;
         }
+
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -206,148 +179,148 @@
             display: block;
             width: 24px;
             height: 2px;
-            background: var(--text-secondary);
+            background: #d4a8f0;
             border-radius: 4px;
-            transition: var(--transition);
+            transition: 0.3s;
         }
         .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(4px,4px);
+            transform: rotate(45deg) translate(4px, 4px);
         }
         .menu-toggle.active span:nth-child(2) {
             opacity: 0;
         }
         .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(4px,-4px);
+            transform: rotate(-45deg) translate(4px, -4px);
         }
 
         /* ===== 主容器 ===== */
         .container {
             max-width: 1140px;
             margin: 0 auto;
-            padding: 0 20px 60px;
+            padding: 40px 20px 60px;
         }
 
-        /* ===== 模块 ===== */
-        .module {
-            margin-top: 48px;
-            scroll-margin-top: 88px; /* 避开固定导航 */
+        /* ===== 卡片 ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px 35px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: 0.3s;
         }
-        .module:first-of-type {
-            margin-top: 24px;
+        .card:hover {
+            border-color: rgba(240, 147, 251, 0.2);
+            background: rgba(255, 255, 255, 0.07);
         }
+
+        /* ===== 模块标题 ===== */
         .module-header {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--border-light);
+            margin-bottom: 28px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid rgba(240, 147, 251, 0.25);
         }
         .module-number {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: rgba(37, 99, 235, 0.08);
-            border: 1px solid rgba(37, 99, 235, 0.2);
+            background: rgba(240, 147, 251, 0.15);
+            border: 1px solid rgba(240, 147, 251, 0.3);
             font-weight: 700;
             font-size: 0.9rem;
-            color: var(--accent-blue);
+            color: #f093fb;
             flex-shrink: 0;
         }
         .module-title {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
             letter-spacing: -0.3px;
-            color: var(--text-primary);
+            color: #f0e6ff;
         }
         .module-desc {
-            color: var(--text-muted);
-            margin-top: 4px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 2px;
             font-size: 0.95rem;
         }
 
-        /* ===== 卡片 ===== */
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 24px 28px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-card);
-            transition: var(--transition);
-        }
-        .card:hover {
-            border-color: #b8d0f0;
-            background: var(--bg-card-hover);
-        }
         .card-title {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: var(--text-primary);
+            gap: 12px;
+            color: #f0e6ff;
         }
         .card-title .badge {
             font-size: 0.65rem;
             font-weight: 500;
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 40px;
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--accent-blue);
-            border: 1px solid rgba(37, 99, 235, 0.15);
+            background: rgba(240, 147, 251, 0.15);
+            color: #f093fb;
+            border: 1px solid rgba(240, 147, 251, 0.2);
             white-space: nowrap;
         }
-        .card p, .card li {
-            color: var(--text-secondary);
+        .card p,
+        .card li {
+            color: rgba(255, 255, 255, 0.75);
         }
-        .card ul, .card ol {
+        .card ul,
+        .card ol {
             padding-left: 22px;
-            margin: 8px 0;
+            margin: 10px 0;
         }
         .card li {
             margin-bottom: 6px;
         }
         .card code {
-            background: #f1f5f9;
+            background: rgba(0, 0, 0, 0.35);
             padding: 2px 10px;
             border-radius: 6px;
             font-size: 0.85rem;
-            color: var(--accent-purple);
-            font-family: 'Courier New', monospace;
+            color: #f093fb;
+            font-family: 'Consolas', 'Monaco', monospace;
         }
+
         .highlight {
-            color: var(--accent-pink);
+            color: #f5576c;
             font-weight: 500;
         }
         .highlight-cyan {
-            color: var(--accent-blue);
+            color: #f093fb;
             font-weight: 500;
         }
         .highlight-purple {
-            color: var(--accent-purple);
+            color: #a78bfa;
             font-weight: 500;
         }
 
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 18px;
         }
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 16px;
+            gap: 18px;
         }
+
         .table-wrap {
             overflow-x: auto;
-            margin: 12px 0 4px;
+            margin: 14px 0 4px;
             border-radius: 12px;
-            border: 1px solid var(--border-light);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.15);
         }
         table {
             width: 100%;
@@ -355,47 +328,50 @@
             font-size: 0.9rem;
         }
         th {
-            background: #f1f5f9;
-            color: var(--text-primary);
+            background: rgba(240, 147, 251, 0.12);
+            color: #d4a8f0;
             font-weight: 600;
             padding: 10px 14px;
             text-align: left;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
         td {
             padding: 10px 14px;
-            border-bottom: 1px solid var(--border-light);
-            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.7);
         }
         tr:last-child td {
             border-bottom: none;
         }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
 
         /* ===== 面试题 ===== */
         .interview-item {
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 18px 22px;
             margin-bottom: 14px;
-            background: #fafcff;
-            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.3s;
         }
         .interview-item:hover {
-            border-color: #b8d0f0;
-            background: #f0f7ff;
+            border-color: rgba(240, 147, 251, 0.2);
+            background: rgba(255, 255, 255, 0.05);
         }
         .interview-q {
             font-weight: 600;
             font-size: 1rem;
-            color: var(--text-primary);
+            color: #f0e6ff;
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
             user-select: none;
         }
         .interview-q .q-icon {
-            color: var(--accent-blue);
+            color: #f093fb;
             font-weight: 700;
             flex-shrink: 0;
             margin-top: 1px;
@@ -403,24 +379,24 @@
         .interview-q .toggle-btn {
             margin-left: auto;
             flex-shrink: 0;
-            background: rgba(37, 99, 235, 0.06);
-            border: 1px solid rgba(37, 99, 235, 0.12);
-            color: var(--accent-blue);
+            background: rgba(240, 147, 251, 0.12);
+            border: 1px solid rgba(240, 147, 251, 0.2);
+            color: #d4a8f0;
             padding: 2px 14px;
             border-radius: 40px;
             font-size: 0.7rem;
             font-weight: 500;
             cursor: pointer;
-            transition: var(--transition);
+            transition: 0.3s;
         }
         .interview-q .toggle-btn:hover {
-            background: rgba(37, 99, 235, 0.12);
+            background: rgba(240, 147, 251, 0.25);
         }
         .interview-a {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-light);
-            color: var(--text-secondary);
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.7);
             display: none;
             font-size: 0.95rem;
             line-height: 1.8;
@@ -429,75 +405,86 @@
             display: block;
         }
         .interview-a strong {
-            color: var(--accent-pink);
+            color: #f5576c;
         }
         .interview-a .key-point {
-            color: var(--accent-blue);
+            color: #f093fb;
             font-weight: 500;
         }
+        .interview-a ul {
+            padding-left: 20px;
+            margin: 6px 0;
+        }
+        .interview-a li {
+            margin-bottom: 4px;
+        }
 
+        /* ===== 复制按钮 ===== */
         .copy-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #f1f5f9;
-            border: 1px solid var(--border-light);
-            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
             padding: 4px 14px;
             border-radius: 40px;
             font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
-            transition: var(--transition);
+            transition: 0.3s;
             margin-top: 8px;
         }
         .copy-btn:hover {
-            background: #e2e8f0;
-            color: var(--accent-blue);
-            border-color: var(--accent-blue);
+            background: rgba(240, 147, 251, 0.12);
+            color: #f093fb;
+            border-color: rgba(240, 147, 251, 0.25);
         }
         .copy-btn.copied {
-            color: var(--accent-green);
-            border-color: var(--accent-green);
+            color: #6fcf97;
+            border-color: #6fcf97;
         }
 
+        /* ===== 底部进度条 ===== */
         .progress-footer {
             position: fixed;
             bottom: 20px;
             right: 20px;
             z-index: 999;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 40px;
             padding: 8px 18px 8px 20px;
             display: flex;
             align-items: center;
             gap: 14px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
         .progress-footer .label {
             font-size: 0.7rem;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.4);
             font-weight: 500;
         }
         .progress-footer .bar {
             width: 100px;
             height: 4px;
-            background: #e2e8f0;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 4px;
             overflow: hidden;
         }
         .progress-footer .bar .fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            background: linear-gradient(90deg, #f093fb, #764ba2);
             border-radius: 4px;
             transition: width 0.6s ease;
         }
         .progress-footer .pct {
             font-size: 0.8rem;
             font-weight: 600;
-            color: var(--accent-blue);
+            color: #f093fb;
             min-width: 40px;
             text-align: right;
         }
@@ -508,48 +495,47 @@
             font-weight: 500;
             padding: 2px 12px;
             border-radius: 40px;
-            background: rgba(124, 58, 237, 0.06);
-            color: var(--accent-purple);
-            border: 1px solid rgba(124, 58, 237, 0.12);
+            background: rgba(167, 139, 250, 0.1);
+            color: #a78bfa;
+            border: 1px solid rgba(167, 139, 250, 0.15);
             margin-right: 4px;
         }
         .tag-cyan {
-            background: rgba(37, 99, 235, 0.06);
-            color: var(--accent-blue);
-            border-color: rgba(37, 99, 235, 0.12);
+            background: rgba(240, 147, 251, 0.08);
+            color: #f093fb;
+            border-color: rgba(240, 147, 251, 0.15);
         }
         .tag-pink {
-            background: rgba(219, 39, 119, 0.06);
-            color: var(--accent-pink);
-            border-color: rgba(219, 39, 119, 0.12);
+            background: rgba(245, 87, 108, 0.08);
+            color: #f5576c;
+            border-color: rgba(245, 87, 108, 0.15);
         }
         .tag-green {
-            background: rgba(5, 150, 105, 0.06);
-            color: var(--accent-green);
-            border-color: rgba(5, 150, 105, 0.12);
+            background: rgba(111, 207, 151, 0.08);
+            color: #6fcf97;
+            border-color: rgba(111, 207, 151, 0.15);
         }
 
         /* ===== 响应式 ===== */
         @media (max-width: 992px) {
-            .grid-2, .grid-3 {
+            .grid-2,
+            .grid-3 {
                 grid-template-columns: 1fr;
             }
         }
         @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .hero {
+                padding: 35px 18px 28px;
+            }
             .navbar {
-                padding: 0 12px;
-                height: 64px;
-            }
-            .navbar-brand {
-                font-size: 1rem;
-                gap: 8px;
-            }
-            .navbar-brand svg {
-                width: 22px;
-                height: 22px;
+                padding: 10px 14px;
+                flex-wrap: wrap;
             }
             .navbar-links {
-                gap: 2px;
+                gap: 4px;
             }
             .navbar-links a {
                 font-size: 0.7rem;
@@ -566,35 +552,25 @@
             }
             .navbar-links.mobile-open {
                 display: flex;
-                position: absolute;
-                top: 64px;
-                left: 0;
-                right: 0;
-                background: #fff;
+                width: 100%;
                 flex-wrap: wrap;
-                padding: 12px 16px;
-                gap: 4px;
-                border-bottom: 1px solid var(--border-light);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+                justify-content: center;
+                padding: 8px 0 4px;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
             }
-            .navbar-links.mobile-open a {
-                font-size: 0.75rem;
-                padding: 6px 12px;
+            .container {
+                padding: 24px 14px 40px;
             }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero .sub {
-                font-size: 1rem;
-            }
-            .hero {
-                padding: 40px 16px 30px;
+            .card {
+                padding: 22px 18px;
             }
             .module-title {
                 font-size: 1.3rem;
             }
-            .card {
-                padding: 18px 16px;
+            .module-number {
+                width: 36px;
+                height: 36px;
+                font-size: 0.8rem;
             }
             .progress-footer {
                 bottom: 12px;
@@ -616,24 +592,15 @@
             .interview-q .toggle-btn {
                 font-size: 0.6rem;
                 padding: 1px 10px;
-                margin-left: auto;
-            }
-            .container {
-                padding: 0 12px 40px;
-            }
-            .module {
-                margin-top: 32px;
             }
         }
         @media (max-width: 480px) {
             .navbar-links a {
                 font-size: 0.65rem;
-                padding: 4px 8px;
+                padding: 3px 8px;
             }
-            .module-number {
-                width: 32px;
-                height: 32px;
-                font-size: 0.75rem;
+            .hero h1 {
+                font-size: 1.5rem;
             }
             .module-title {
                 font-size: 1.1rem;
@@ -643,22 +610,47 @@
             }
         }
 
-        .mt-8 { margin-top: 8px; }
-        .mt-16 { margin-top: 16px; }
-        .mb-8 { margin-bottom: 8px; }
-        .flex { display: flex; }
-        .flex-wrap { flex-wrap: wrap; }
-        .gap-8 { gap: 8px; }
-        .gap-12 { gap: 12px; }
-        .items-center { align-items: center; }
-        .text-sm { font-size: 0.85rem; }
-        .text-muted { color: var(--text-muted); }
-        .text-center { text-align: center; }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mt-24 {
+            margin-top: 24px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .text-sm {
+            font-size: 0.85rem;
+        }
+        .text-muted {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .text-center {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <!-- ===== 标题区 (Hero) – 最前面 ===== -->
+    <!-- ===== Hero 标题区 ===== -->
     <header class="hero">
         <div class="sub">Transformer 深度学习</div>
         <h1>核心概念 · 架构设计 · 面试要点</h1>
@@ -671,7 +663,7 @@
         </div>
     </header>
 
-    <!-- ===== 导航栏 (sticky, 放在标题下方) ===== -->
+    <!-- ===== 导航栏 ===== -->
     <nav class="navbar" id="navbar" role="navigation">
         <div class="navbar-brand">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -722,16 +714,16 @@
                     <span class="badge">核心概念</span>
                 </div>
                 <p>Transformer 是 Google 于 2017 年在论文 <em>“Attention Is All You Need”</em> 中提出的新型神经网络架构。它彻底摒弃了 RNN 和 CNN，完全基于 <span class="highlight-cyan">自注意力机制（Self-Attention）</span>，能够并行处理序列数据，高效捕捉长距离依赖关系。如今已成为 NLP、CV、多模态等领域的主流基础模型。</p>
-                <p class="mt-8 text-muted text-sm">💡 简单理解：输入文本 → <strong>Encoder</strong>（编码器）→ <strong>Decoder</strong>（解码器）→ 输出结果。</p>
+                <p class="mt-8 text-muted text-sm">💡 简单理解：输入文本 → <strong style="color:#f0e6ff;">Encoder</strong>（编码器）→ <strong style="color:#f0e6ff;">Decoder</strong>（解码器）→ 输出结果。</p>
             </div>
 
             <div class="grid-2">
                 <div class="card">
                     <div class="card-title">🚀 为什么引入 Transformer？</div>
                     <ul>
-                        <li><strong>RNN</strong>：串行计算导致训练慢，梯度消失/爆炸使得长距离依赖难以捕捉。</li>
-                        <li><strong>CNN</strong>：虽可并行，但需堆叠多层才能扩大感受野，建立长距离关联成本高。</li>
-                        <li><strong>Transformer</strong>：<span class="highlight-cyan">并行计算</span> + <span class="highlight-purple">直接建模所有位置间依赖</span>，训练效率高且性能卓越。</li>
+                        <li><strong style="color:#f0e6ff;">RNN</strong>：串行计算导致训练慢，梯度消失/爆炸使得长距离依赖难以捕捉。</li>
+                        <li><strong style="color:#f0e6ff;">CNN</strong>：虽可并行，但需堆叠多层才能扩大感受野，建立长距离关联成本高。</li>
+                        <li><strong style="color:#f0e6ff;">Transformer</strong>：<span class="highlight-cyan">并行计算</span> + <span class="highlight-purple">直接建模所有位置间依赖</span>，训练效率高且性能卓越。</li>
                     </ul>
                 </div>
                 <div class="card">
@@ -780,14 +772,14 @@
 
             <div class="card">
                 <div class="card-title">🎯 注意力机制的本质</div>
-                <p>注意力机制可以理解为 <span class="highlight-cyan">软性的特征选择</span>。通过 <strong>Query</strong> 和 <strong>Key</strong> 计算相似度，得到注意力权重，再对 <strong>Value</strong> 加权求和，从而聚焦于重要的信息。在 Transformer 中，自注意力使每个位置都能直接关注到所有其他位置，实现全局交互。</p>
+                <p>注意力机制可以理解为 <span class="highlight-cyan">软性的特征选择</span>。通过 <strong style="color:#f0e6ff;">Query</strong> 和 <strong style="color:#f0e6ff;">Key</strong> 计算相似度，得到注意力权重，再对 <strong style="color:#f0e6ff;">Value</strong> 加权求和，从而聚焦于重要的信息。在 Transformer 中，自注意力使每个位置都能直接关注到所有其他位置，实现全局交互。</p>
                 <div class="table-wrap mt-8">
                     <table>
                         <thead><tr><th>概念</th><th>角色</th></tr></thead>
                         <tbody>
-                            <tr><td><strong>Query (Q)</strong></td><td>查询向量，代表当前关注点</td></tr>
-                            <tr><td><strong>Key (K)</strong></td><td>键向量，用于与 Q 匹配</td></tr>
-                            <tr><td><strong>Value (V)</strong></td><td>值向量，根据权重提取信息</td></tr>
+                            <tr><td><strong style="color:#f0e6ff;">Query (Q)</strong></td><td>查询向量，代表当前关注点</td></tr>
+                            <tr><td><strong style="color:#f0e6ff;">Key (K)</strong></td><td>键向量，用于与 Q 匹配</td></tr>
+                            <tr><td><strong style="color:#f0e6ff;">Value (V)</strong></td><td>值向量，根据权重提取信息</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -827,8 +819,8 @@
             <div class="card">
                 <div class="card-title">⚖️ 点乘 vs 加法注意力</div>
                 <ul>
-                    <li><strong>点乘</strong>：矩阵乘法高效并行，但值可能过大 → 需缩放。</li>
-                    <li><strong>加法</strong>：对长序列可能更优，但计算复杂度更高（常数因子大）。</li>
+                    <li><strong style="color:#f0e6ff;">点乘</strong>：矩阵乘法高效并行，但值可能过大 → 需缩放。</li>
+                    <li><strong style="color:#f0e6ff;">加法</strong>：对长序列可能更优，但计算复杂度更高（常数因子大）。</li>
                 </ul>
                 <p class="text-sm text-muted mt-8">✅ Transformer 选择点乘，因为 <span class="highlight-cyan">效率高 + 建模能力强</span>。</p>
             </div>
@@ -855,10 +847,10 @@
             <div class="grid-2">
                 <div class="card">
                     <div class="card-title">📥 输入表示</div>
-                    <p><strong>Input Embedding</strong> + <strong>Position Encoding</strong> 相加后进入 Transformer Block。</p>
+                    <p><strong style="color:#f0e6ff;">Input Embedding</strong> + <strong style="color:#f0e6ff;">Position Encoding</strong> 相加后进入 Transformer Block。</p>
                     <ul>
-                        <li><strong>词嵌入</strong>：将 token 映射为稠密向量（维度 d_model）。</li>
-                        <li><strong>位置编码</strong>：注入顺序信息（原始使用 sin/cos 函数）。</li>
+                        <li><strong style="color:#f0e6ff;">词嵌入</strong>：将 token 映射为稠密向量（维度 d_model）。</li>
+                        <li><strong style="color:#f0e6ff;">位置编码</strong>：注入顺序信息（原始使用 sin/cos 函数）。</li>
                     </ul>
                     <p class="text-sm text-muted mt-8">📌 为什么要乘 <code>√d_model</code>？—— 防止点积数值过大，保持训练稳定。</p>
                 </div>
@@ -868,7 +860,7 @@
                     <code>PE(pos, 2i) = sin(pos / 10000^(2i/d))</code><br>
                     <code>PE(pos, 2i+1) = cos(pos / 10000^(2i/d))</code>
                     <p class="text-sm text-muted mt-8">✅ 优点：固定模式、可推广到更长序列、并行友好。<br>⚠️ 缺点：固定长度限制，可能需要更多数据学习利用。</p>
-                    <p class="text-sm text-muted mt-8">🔹 其他位置编码技术：<strong>学习式位置编码</strong>（可训练参数）、<strong>相对位置编码</strong>（关注相对偏移，如 Transformer-XL）、<strong>轴向位置编码</strong>（降低参数量）等，各有优劣。</p>
+                    <p class="text-sm text-muted mt-8">🔹 其他位置编码技术：<strong style="color:#f0e6ff;">学习式位置编码</strong>（可训练参数）、<strong style="color:#f0e6ff;">相对位置编码</strong>（关注相对偏移，如 Transformer-XL）、<strong style="color:#f0e6ff;">轴向位置编码</strong>（降低参数量）等，各有优劣。</p>
                 </div>
             </div>
 
@@ -878,7 +870,7 @@
                 <ul>
                     <li><span class="highlight-cyan">多头自注意力</span>（Multi-Head Self-Attention）—— 每个位置关注所有位置。</li>
                     <li><span class="highlight-purple">前馈神经网络</span>（Position-wise FFN）—— 两个线性变换 + ReLU/GELU 激活。</li>
-                    <li>每个子层后接 <strong>残差连接</strong> + <strong>层归一化</strong>（LayerNorm）。</li>
+                    <li>每个子层后接 <strong style="color:#f0e6ff;">残差连接</strong> + <strong style="color:#f0e6ff;">层归一化</strong>（LayerNorm）。</li>
                 </ul>
                 <p class="text-sm text-muted mt-8">📌 所有位置共享同一组参数，但每个 token 独立计算，实现并行。</p>
             </div>
@@ -896,7 +888,7 @@
                 <div class="card">
                     <div class="card-title">📊 层归一化（LayerNorm）</div>
                     <ul>
-                        <li>对 <strong>单个样本</strong> 的所有特征做归一化（均值为 0，方差为 1）。</li>
+                        <li>对 <strong style="color:#f0e6ff;">单个样本</strong> 的所有特征做归一化（均值为 0，方差为 1）。</li>
                         <li>✅ 稳定训练，加速收敛。</li>
                         <li>✅ 与 BN 不同：BN 在 batch 维度（依赖 batch 统计），LN 在 feature 维度，适合变长序列。</li>
                     </ul>
@@ -908,11 +900,11 @@
                 <div class="card-title">🔄 Encoder 与 Decoder 交互</div>
                 <p>Decoder 通过 <span class="highlight-cyan">交叉注意力</span> 与 Encoder 交互：</p>
                 <ul>
-                    <li><strong>Q</strong>：来自 Decoder 上一层的输出。</li>
-                    <li><strong>K、V</strong>：来自 Encoder 最后一层的输出（所有位置）。</li>
+                    <li><strong style="color:#f0e6ff;">Q</strong>：来自 Decoder 上一层的输出。</li>
+                    <li><strong style="color:#f0e6ff;">K、V</strong>：来自 Encoder 最后一层的输出（所有位置）。</li>
                     <li>Decoder 每个位置可访问 Encoder 所有位置的输出，实现信息融合。</li>
                 </ul>
-                <p class="text-sm text-muted mt-8">📌 Decoder 的 Masked Self-Attention 用于防止“偷看”未来信息，保持自回归属性（生成当前词时只能依赖历史词）。</p>
+                <p class="text-sm text-muted mt-8">📌 Decoder 的 Masked Self-Attention 用于防止"偷看"未来信息，保持自回归属性（生成当前词时只能依赖历史词）。</p>
             </div>
 
             <div class="card">
@@ -921,7 +913,7 @@
                 <code>FFN(x) = max(0, xW₁ + b₁) W₂ + b₂</code>
                 <ul>
                     <li>将维度从 <code>d_model</code> 放大到 <code>d_ff</code>（通常 4 倍），再映射回。</li>
-                    <li>激活函数原始用 <strong>ReLU</strong>，后续变体常用 <strong>GELU</strong>（高斯误差线性单元），某些任务上表现更优。</li>
+                    <li>激活函数原始用 <strong style="color:#f0e6ff;">ReLU</strong>，后续变体常用 <strong style="color:#f0e6ff;">GELU</strong>（高斯误差线性单元），某些任务上表现更优。</li>
                     <li>每个位置独立应用，参数不共享，增加非线性表达能力。</li>
                 </ul>
                 <p class="text-sm text-muted mt-8">💡 FFN 是 Transformer 中唯一的非线性组件，对模型性能至关重要。</p>
@@ -945,18 +937,18 @@
                 <div class="card">
                     <div class="card-title">⚡ 并行化体现在哪里？</div>
                     <ul>
-                        <li><strong>自注意力</strong>：所有位置同时计算注意力分数，无时序依赖。</li>
-                        <li><strong>前馈网络</strong>：每个位置独立，可并行。</li>
-                        <li><strong>多头注意力</strong>：各头并行计算。</li>
-                        <li><strong>层间</strong>：无递归连接，可流水线并行。</li>
+                        <li><strong style="color:#f0e6ff;">自注意力</strong>：所有位置同时计算注意力分数，无时序依赖。</li>
+                        <li><strong style="color:#f0e6ff;">前馈网络</strong>：每个位置独立，可并行。</li>
+                        <li><strong style="color:#f0e6ff;">多头注意力</strong>：各头并行计算。</li>
+                        <li><strong style="color:#f0e6ff;">层间</strong>：无递归连接，可流水线并行。</li>
                     </ul>
-                    <p class="text-sm text-muted mt-8">⚠️ Decoder 在 <strong>推理阶段</strong> 需自回归生成，无法完全并行；<br>但在 <strong>训练阶段</strong> 可通过 Teacher Forcing 并行（使用真实目标序列作为输入）。</p>
+                    <p class="text-sm text-muted mt-8">⚠️ Decoder 在 <strong style="color:#f0e6ff;">推理阶段</strong> 需自回归生成，无法完全并行；<br>但在 <strong style="color:#f0e6ff;">训练阶段</strong> 可通过 Teacher Forcing 并行（使用真实目标序列作为输入）。</p>
                 </div>
                 <div class="card">
                     <div class="card-title">🎭 Mask 机制</div>
                     <ul>
-                        <li><strong>Padding Mask</strong>：忽略填充位置，避免无效计算（在 softmax 前将 pad 位置设为 -1e9）。</li>
-                        <li><strong>Sequence Mask</strong>：Decoder 自注意力中，遮挡未来位置，防止信息泄露。</li>
+                        <li><strong style="color:#f0e6ff;">Padding Mask</strong>：忽略填充位置，避免无效计算（在 softmax 前将 pad 位置设为 -1e9）。</li>
+                        <li><strong style="color:#f0e6ff;">Sequence Mask</strong>：Decoder 自注意力中，遮挡未来位置，防止信息泄露。</li>
                     </ul>
                     <p class="text-sm text-muted mt-8">💡 具体操作：在 softmax 前将 mask 位置设为 <code>-1e9</code>，使权重趋近 0，从而忽略这些位置。</p>
                 </div>
@@ -965,8 +957,8 @@
             <div class="card">
                 <div class="card-title">🔁 权重共享（Weight Tying）</div>
                 <ul>
-                    <li><strong>Embedding 层</strong>：所有 token 共享同一套嵌入权重。</li>
-                    <li><strong>LM Head</strong>：输出层（Softmax 前的线性层）与 Embedding 层共享权重。</li>
+                    <li><strong style="color:#f0e6ff;">Embedding 层</strong>：所有 token 共享同一套嵌入权重。</li>
+                    <li><strong style="color:#f0e6ff;">LM Head</strong>：输出层（Softmax 前的线性层）与 Embedding 层共享权重。</li>
                 </ul>
                 <p class="mt-8 text-sm text-muted">✅ 好处：减少参数量（尤其是大词表）、加速训练、提升泛化能力，使 Embedding 训练更充分。</p>
             </div>
@@ -974,12 +966,12 @@
             <div class="card">
                 <div class="card-title">🧪 训练技巧与超参数</div>
                 <ul>
-                    <li><strong>优化器</strong>：Adam（beta1=0.9, beta2=0.98, epsilon=1e-9）。</li>
-                    <li><strong>学习率调度</strong>：预热（Warmup）—— 前 4000 步线性增长，之后按步数倒数衰减。</li>
-                    <li><strong>标签平滑</strong>：将 one-hot 标签变为 <code>(1-ε)</code> 和 <code>ε/(vocab_size)</code>，避免过自信，增强泛化。</li>
-                    <li><strong>Dropout</strong>：训练时随机丢弃神经元（通常 0.1），测试时禁用。</li>
-                    <li><strong>激活函数</strong>：原始用 ReLU，后续变体常用 GELU（在多项任务上表现更好）。</li>
-                    <li><strong>梯度裁剪</strong>：防止梯度爆炸（最大范数通常设为 1.0）。</li>
+                    <li><strong style="color:#f0e6ff;">优化器</strong>：Adam（beta1=0.9, beta2=0.98, epsilon=1e-9）。</li>
+                    <li><strong style="color:#f0e6ff;">学习率调度</strong>：预热（Warmup）—— 前 4000 步线性增长，之后按步数倒数衰减。</li>
+                    <li><strong style="color:#f0e6ff;">标签平滑</strong>：将 one-hot 标签变为 <code>(1-ε)</code> 和 <code>ε/(vocab_size)</code>，避免过自信，增强泛化。</li>
+                    <li><strong style="color:#f0e6ff;">Dropout</strong>：训练时随机丢弃神经元（通常 0.1），测试时禁用。</li>
+                    <li><strong style="color:#f0e6ff;">激活函数</strong>：原始用 ReLU，后续变体常用 GELU（在多项任务上表现更好）。</li>
+                    <li><strong style="color:#f0e6ff;">梯度裁剪</strong>：防止梯度爆炸（最大范数通常设为 1.0）。</li>
                 </ul>
                 <p class="text-sm text-muted mt-8">📌 典型配置：d_model=512, d_ff=2048, head=8, layers=6, dropout=0.1。</p>
             </div>
@@ -1004,7 +996,7 @@
                     <ul>
                         <li>基于 <span class="highlight-cyan">Encoder</span> 的预训练模型（双向 Transformer）。</li>
                         <li>双向自注意力，捕捉上下文信息（左右两方向）。</li>
-                        <li>预训练任务：<strong>MLM</strong>（掩码语言模型，随机遮盖 15% 的 token） + <strong>NSP</strong>（下一句预测）。</li>
+                        <li>预训练任务：<strong style="color:#f0e6ff;">MLM</strong>（掩码语言模型，随机遮盖 15% 的 token） + <strong style="color:#f0e6ff;">NSP</strong>（下一句预测）。</li>
                         <li>适用场景：文本分类、命名实体识别、问答系统等理解型任务。</li>
                     </ul>
                 </div>
@@ -1048,10 +1040,10 @@
             <div class="card">
                 <div class="card-title">🔧 其他重要变体</div>
                 <ul>
-                    <li><strong>Transformer-XL</strong>：引入循环机制和相对位置编码，处理超长序列。</li>
-                    <li><strong>Reformer</strong>：使用局部敏感哈希（LSH）和可逆网络降低内存。</li>
-                    <li><strong>Longformer</strong>：采用滑动窗口 + 全局注意力，线性复杂度。</li>
-                    <li><strong>T5</strong>：统一的文本到文本框架，所有任务都转为生成任务。</li>
+                    <li><strong style="color:#f0e6ff;">Transformer-XL</strong>：引入循环机制和相对位置编码，处理超长序列。</li>
+                    <li><strong style="color:#f0e6ff;">Reformer</strong>：使用局部敏感哈希（LSH）和可逆网络降低内存。</li>
+                    <li><strong style="color:#f0e6ff;">Longformer</strong>：采用滑动窗口 + 全局注意力，线性复杂度。</li>
+                    <li><strong style="color:#f0e6ff;">T5</strong>：统一的文本到文本框架，所有任务都转为生成任务。</li>
                 </ul>
             </div>
             <div style="display: flex; justify-content: flex-end;">
@@ -1101,7 +1093,7 @@
                         <p><strong>面试官想听到：</strong>使用不同权重是为了让 Q 和 K 处于不同的语义空间，从而允许模型灵活地匹配查询和键，避免对称性限制。</p>
                         <ul>
                             <li><span class="key-point">灵活性</span>：若 Q=K，则注意力矩阵是对称的，只能表达对称关系，限制了模型捕捉非对称依赖的能力（如语法中的主谓关系）。</li>
-                            <li><span class="key-point">表示能力</span>：不同投影矩阵使 Q 和 K 可以代表不同的语义角色，例如 Q 偏向于“问题”，K 偏向于“特征”，从而更好地实现注意力打分。</li>
+                            <li><span class="key-point">表示能力</span>：不同投影矩阵使 Q 和 K 可以代表不同的语义角色，例如 Q 偏向于"问题"，K 偏向于"特征"，从而更好地实现注意力打分。</li>
                             <li><span class="key-point">梯度流动</span>：独立的投影矩阵为反向传播提供了更多路径，有助于优化。</li>
                         </ul>
                         <p class="text-sm text-muted mt-8">📌 同理，V 使用独立矩阵，使得提取的内容与匹配过程解耦，增加灵活性。</p>
@@ -1173,7 +1165,7 @@
                     <div class="interview-a">
                         <p><strong>面试官想听到：</strong>残差连接解决了深层网络训练难的问题，保证梯度有效回传，同时保留了输入信息。</p>
                         <ul>
-                            <li><span class="key-point">缓解梯度消失</span>：通过“跳跃连接”，梯度可以直接从输出层流向浅层，避免逐层衰减。</li>
+                            <li><span class="key-point">缓解梯度消失</span>：通过"跳跃连接"，梯度可以直接从输出层流向浅层，避免逐层衰减。</li>
                             <li><span class="key-point">简化学习目标</span>：每层只需学习输入与输出的残差，比直接学习完整映射更容易。</li>
                             <li><span class="key-point">信息完整性</span>：即使某层参数未优化好，原始输入仍可通过残差直达下一层，保证前向传播的有效性。</li>
                             <li><span class="key-point">支持更深网络</span>：使得堆叠数十层甚至上百层成为可能（如 GPT-3 有 96 层）。</li>
@@ -1190,7 +1182,7 @@
                         <span class="toggle-btn">显示答案</span>
                     </div>
                     <div class="interview-a">
-                        <p><strong>面试官想听到：</strong>序列掩码是维持自回归属性（因果性）的必要手段，防止模型在训练时“看到”未来信息，导致推理时无法使用。</p>
+                        <p><strong>面试官想听到：</strong>序列掩码是维持自回归属性（因果性）的必要手段，防止模型在训练时"看到"未来信息，导致推理时无法使用。</p>
                         <ul>
                             <li><span class="key-point">自回归要求</span>：生成第 t 个 token 时，只能依赖前 t-1 个 token，不能利用 t 之后的 token。</li>
                             <li><span class="key-point">训练时</span>：虽然已知完整目标序列，但必须通过掩码模拟推理时的条件，确保模型学会基于历史信息预测。</li>
@@ -1215,7 +1207,7 @@
                             <li><span class="key-point">Decoder 训练并行</span>：通过 Teacher Forcing 使用真实目标序列作为输入，所有位置同时参与计算，因此训练时可并行。</li>
                             <li><span class="key-point">Decoder 推理串行</span>：生成是逐步的（自回归），当前步依赖上一步的输出，因此无法完全并行，只能通过缓存（KV Cache）加速。</li>
                         </ul>
-                        <p class="text-sm text-muted mt-8">📌 面试中可能会追问“如何提升推理并行度”，可以提到非自回归生成、并行解码等方向。</p>
+                        <p class="text-sm text-muted mt-8">📌 面试中可能会追问"如何提升推理并行度"，可以提到非自回归生成、并行解码等方向。</p>
                     </div>
                 </div>
 
@@ -1253,7 +1245,7 @@
                             <li><span class="key-point">位置独立</span>：FFN 对每个位置独立应用，参数共享，有助于学习位置特定的特征。</li>
                             <li><span class="key-point">激活函数选择</span>：ReLU 简单高效，GELU 更平滑，部分任务上性能更优。</li>
                         </ul>
-                        <p class="text-sm text-muted mt-8">📌 面试中可能追问“能否用其他结构代替 FFN？”，可以讨论 MoE（混合专家）等变体。</p>
+                        <p class="text-sm text-muted mt-8">📌 面试中可能追问"能否用其他结构代替 FFN？"，可以讨论 MoE（混合专家）等变体。</p>
                     </div>
                 </div>
 
@@ -1328,7 +1320,7 @@
                             <li><span class="key-point">好处</span>：① 减少参数量（大词表时节省明显）；② 加速训练，因为 Embedding 和输出层同步更新；③ 提升泛化能力，使词向量学习更充分。</li>
                             <li><span class="key-point">典型应用</span>：GPT、Transformer 原始模型均采用了权重绑定。</li>
                         </ul>
-                        <p class="text-sm text-muted mt-8">📌 面试中可能追问“是否所有情况都适用？”，可以讨论当 Encoder 和 Decoder 词表不同时无法共享。</p>
+                        <p class="text-sm text-muted mt-8">📌 面试中可能追问"是否所有情况都适用？"，可以讨论当 Encoder 和 Decoder 词表不同时无法共享。</p>
                     </div>
                 </div>
 
@@ -1359,10 +1351,10 @@
                 <button class="copy-btn" data-copy="module-interview">📋 复制面试考点</button>
             </div>
 
-            <div class="card mt-16" style="border-color: var(--border-light);">
+            <div class="card mt-16" style="border-color: rgba(240, 147, 251, 0.15);">
                 <div class="flex flex-wrap gap-8 items-center" style="justify-content: space-between;">
-                    <span style="color: var(--text-secondary); font-size: 0.9rem;">💡 点击题目可切换答案显示，方便自测</span>
-                    <button id="toggleAllAnswers" class="copy-btn" style="border-color: var(--accent-blue); color: var(--accent-blue);">🔁 全部展开 / 收起</button>
+                    <span style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">💡 点击题目可切换答案显示，方便自测</span>
+                    <button id="toggleAllAnswers" class="copy-btn" style="border-color: rgba(240,147,251,0.3); color: #d4a8f0;">🔁 全部展开 / 收起</button>
                 </div>
             </div>
         </section>
@@ -1609,5 +1601,6 @@
 
         })();
     </script>
+
 </body>
 </html>
